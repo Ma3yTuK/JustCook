@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_just">Some</string>
+    <string name="search_no_matches">No matches for “%1s”</string>
+    <string name="search_no_matches_retry">Try broadening your search</string>
+    <string name="label_add">add</string>
+    <string name="label_back">back</string>
+    <string name="label_search">search\n</string>
+</resources>
