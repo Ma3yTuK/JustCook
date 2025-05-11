@@ -1,11 +1,13 @@
 <resources>
     <string name="label_back">Back</string>
+    <string name="label_edit">Toggle edit</string>
 
     <!-- Home Tabs -->
     <string name="home_feed">Home</string>
     <string name="home_search">Search</string>
     <string name="home_cart">My Cart</string>
     <string name="home_profile">Profile</string>
+    <string name="calories">ккал</string>
 
     <!-- Home -->
     <string name="label_filters">Filters</string>
@@ -20,10 +22,10 @@
     <string name="label_search">Perform search</string>
 
     <!-- Snack Detail -->
-    <string name="detail_header">Details</string>
+    <string name="detail_header">Описание</string>
     <string name="detail_placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tempus, sem vitae convallis imperdiet, lectus nunc pharetra diam, ac rhoncus quam eros eu risus. Nulla pulvinar condimentum erat, pulvinar tempus turpis blandit ut. Etiam sed ipsum sed lacus eleifend hendrerit eu quis quam. Etiam ligula eros, finibus vestibulum tortor ac, ultrices accumsan dolor. Vivamus vel nisl a libero lobortis posuere. Aenean facilisis nibh vel ultrices bibendum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Suspendisse ac est vitae lacus commodo efficitur at ut massa. Etiam vestibulum sit amet sapien sed varius. Aliquam non ipsum imperdiet, pulvinar enim nec, mollis risus. Fusce id tincidunt nisl.</string>
-    <string name="ingredients">Ingredients</string>
-    <string name="steps">Steps</string>
+    <string name="ingredients">Ингредиенты</string>
+    <string name="steps">Порядок приготовления</string>
     <string name="ingredients_list">Vanilla, Almond Flour, Eggs, Butter, Cream, Sugar</string>
     <string name="quantity">Qty</string>
     <string name="add_to_cart">ADD TO CART</string>
@@ -62,4 +64,42 @@
     <string name="rating">Rating</string>
     <string name="alphabetical">Alphabetical</string>
     <string name="close">Close</string>
+    <string name="step_number_format">Шаг %1d</string>
+    <string name="reviews_title">Отзывы</string>
+    <string name="no_reviews_yet">Здесь пока ничего нет</string>
+
+    <string name="january">января</string>
+    <string name="february">февраля</string>
+    <string name="march">марта</string>
+    <string name="april">апреля</string>
+    <string name="may">мая</string>
+    <string name="june">июня</string>
+    <string name="july">июля</string>
+    <string name="august">августа</string>
+    <string name="september">сентября</string>
+    <string name="october">октября</string>
+    <string name="november">ноября</string>
+    <string name="december">декабря</string>
+    <string name="delete_review">Удалить</string>
+    <string name="add_review">Добавить отзыв</string>
+    <string name="review_comment_hint">Оставьте комментарий</string>
+    <string name="submit_review">Сохранить</string>
+    <string name="leave_review">Оставить отзыв</string>
+    <string name="remove_from_favourite">Удалить из избранного</string>
+    <string name="add_to_favourite">Добавить в избранное</string>
+    <string name="edit">Редактировать\n</string>
+    <string name="edit_recipe_name">Введите название рецепта</string>
+    <string name="save">Сохранить</string>
+    <string name="save_edit">Сохранить\n</string>
+    <string name="cancel_edit">Отмена</string>
+    <string name="save_recipe">Сохранить</string>
+    <string name="remove_recipe">Удалить</string>
+    <string name="edit_description">Редактировать</string>
+    <string name="amount">Количество</string>
+    <string name="unit">Величина измерения</string>
+    <string name="delete">Удалить</string>
+    <string name="add_ingredient">Добавить ингредиент</string>
+    <string name="ingredient">Ингредиент</string>
+    <string name="select_ingredient">Выберите ингредиент</string>
+    <string name="add">Добавить</string>
 </resources>

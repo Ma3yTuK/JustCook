@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.example.components.theme.JustCookColorPalette
 import kotlin.math.max
-import com.example.components.RecipeImage
+import com.example.components.JustImage
 import com.example.components.VerticalGrid
 import com.example.data.models.SearchCategory
 import com.example.data.models.SearchCategoryCollection
@@ -120,7 +120,7 @@ private fun SearchCategory(
                     .padding(4.dp)
                     .padding(start = 8.dp)
             )
-            RecipeImage(
+            JustImage(
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize()
             )

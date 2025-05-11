@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="edit_profile">Редактировать профиль</string>
+    <string name="my_recipes">Мои рецепты</string>
+    <string name="favorites">Избранное</string>
+    <string name="logout">Выход</string>
+</resources>

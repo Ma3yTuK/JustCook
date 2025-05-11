@@ -2,8 +2,6 @@ package com.example.components
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -16,7 +14,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 
 @Composable
-fun RecipeImage(
+fun JustImage(
     contentDescription: String?,
     modifier: Modifier = Modifier,
     elevation: Dp = 0.dp

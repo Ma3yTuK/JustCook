@@ -54,6 +54,7 @@ dependencies {
     implementation(project(":feature:catalogue"))
     implementation(libs.androidx.navigation.compose)
     implementation(project(":feature:search"))
+    implementation(project(":feature:profile"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

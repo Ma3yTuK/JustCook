@@ -86,7 +86,7 @@ fun ListItem(
     ) {
         val (image, name, tag, priceSpacer, price, remove) = createRefs()
         createVerticalChain(name, tag, priceSpacer, price, chainStyle = ChainStyle.Packed)
-        RecipeImage(
+        JustImage(
             contentDescription = null,
             modifier = Modifier
                 .size(100.dp)

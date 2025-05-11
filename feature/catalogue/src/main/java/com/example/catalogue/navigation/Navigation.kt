@@ -1,22 +1,22 @@
 package com.example.catalogue.navigation
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
-import com.example.catalogue.Feed
+import com.example.catalogue.feed.Feed
 import com.example.catalogue.FilteredRecipeList
-import com.example.catalogue.RecipeDetail
+import com.example.catalogue.recipe_detail.RecipeDetail
 import com.example.components.composableWithCompositionLocal
-import com.example.data.models.Recipe
-import com.example.data.models.RecipeCollection
+import com.example.data.models.IngredientIngredientConversion
 import com.example.data.services.RecipeService
 import kotlinx.serialization.Serializable
-import androidx.compose.material3.Text
-import com.example.data.models.MeasurementUnit
 
 @Serializable object FeedRoute
 @Serializable data class FilteredRecipeListRoute(val collectionId: Long)
@@ -51,11 +51,30 @@ fun NavGraphBuilder.catalogueNavigation(
         }
         composableWithCompositionLocal<RecipeDetailRoute> { backStackEntry ->
             val recipeDetailsRoute: RecipeDetailRoute = backStackEntry.toRoute()
+            var isInEditMode by remember { mutableStateOf(false) }
 
             RecipeDetail(
                 recipe = RecipeService.allRecipes.find { it.id == recipeDetailsRoute.recipeId } ?: RecipeService.allRecipes.first(),
                 collectionId = recipeDetailsRoute.collectionId,
-                upPress = { navController.navigateUp() }
+                canDeleteReview = { _ -> true },
+                onDeleteReview = { _ -> },
+                onSubmitReview = { _, _ -> },
+                onNameChange = { _ -> },
+                onChangeDescription = { _ -> },
+                getConversionsForIngredient = { _ -> listOf() },
+                setIngredientAmount = { _, _ -> },
+                setIngredientConversion = { _, _ -> },
+                onToggleFavouritePress = {},
+                isLoggedIn = true,
+                isInEditMode = isInEditMode,
+                canEdit = true,
+                onEdit = { isInEditMode = true },
+                onSaveEdit = {},
+                onCancelEdit = { isInEditMode = false },
+                upPress = { navController.navigateUp() },
+                onDeleteIngredient = { _ -> },
+                addIngredient = { _, _, _ -> },
+                allIngredients = RecipeService.allIngredients
             )
         }
     }

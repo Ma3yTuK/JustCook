@@ -1,0 +1,23 @@
+package com.example.catalogue.feed.components.recipe_collection_list.components.recipe_collection.components.highlight_recipe_item.components.card_contentent
+
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.example.catalogue.feed.components.recipe_collection_list.components.recipe_collection.components.highlight_recipe_item.components.card_contentent.components.CardCalories
+import com.example.catalogue.feed.components.recipe_collection_list.components.recipe_collection.components.highlight_recipe_item.components.card_contentent.components.CardRating
+import com.example.catalogue.feed.components.recipe_collection_list.components.recipe_collection.components.highlight_recipe_item.components.card_contentent.components.CardTitle
+import com.example.data.models.Recipe
+
+@Composable
+fun CardContent(
+    recipe: Recipe,
+    collectionId: Long
+) {
+    CardRating(recipe, collectionId)
+    Spacer(modifier = Modifier.height(4.dp))
+    CardTitle(recipe, collectionId)
+    Spacer(modifier = Modifier.height(4.dp))
+    CardCalories(recipe, collectionId)
+}

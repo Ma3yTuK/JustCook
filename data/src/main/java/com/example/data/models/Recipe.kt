@@ -7,9 +7,11 @@ import kotlinx.serialization.Serializable
 @Serializable data class Recipe(
     val id: Long,
     val name: String,
-    val tagline: String = "",
+    val calories: Long,
+    val rating: Float,
     val description: String,
     val isFavourite: Boolean,
     val steps: List<RecipeStep>,
-    val ingredients: List<RecipeIngredient>
+    val ingredients: List<RecipeIngredient>,
+    val reviews: List<Review>
 )

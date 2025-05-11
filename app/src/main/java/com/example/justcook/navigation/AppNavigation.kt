@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import com.example.catalogue.navigation.catalogueNavigation
 import com.example.catalogue.navigation.Catalogue
 import com.example.catalogue.navigation.navigateToRecipeDetail
+import com.example.profile.navigation.profileNavigation
 import com.example.search.navigation.searchNavigation
 
 @Composable
@@ -27,6 +28,9 @@ fun AppNavigation(
         searchNavigation(
             navController,
             onRecipeClick = { recipeId -> navController.navigateToRecipeDetail(recipeId) }
+        )
+        profileNavigation(
+            navController
         )
     }
 }

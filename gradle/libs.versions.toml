@@ -22,8 +22,13 @@ coil = "2.7.0"
 tvMaterial = "1.0.0"
 text-flow = "1.2.1"
 androidx-constraintlayout = "1.1.1"
+serializationDate = "0.6.2"
 serializationPlugin = "2.1.0"
 foundationLayoutAndroid = "1.8.0"
+runtimeAndroidVersion = "1.8.1"
+navigationCommonAndroid = "2.9.0"
+navigationRuntimeAndroidVersion = "2.9.0"
+navigationComposeAndroid = "2.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,6 +60,11 @@ androidx-tv-material = { group = "androidx.tv", name = "tv-material", version.re
 text-flow-modules = { module = "io.github.oleksandrbalan:textflow-material3", version.ref = "text-flow" }
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "androidx-constraintlayout" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
+kotlinx-datetime-serialization = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "serializationDate" }
+runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroidVersion" }
+androidx-navigation-common-android = { group = "androidx.navigation", name = "navigation-common-android", version.ref = "navigationCommonAndroid" }
+navigation-runtime-android = { group = "androidx.navigation", name = "navigation-runtime-android", version.ref = "navigationRuntimeAndroidVersion" }
+androidx-navigation-compose-android = { group = "androidx.navigation", name = "navigation-compose-android", version.ref = "navigationComposeAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

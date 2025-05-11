@@ -1,17 +1,11 @@
-package com.example.catalogue.components
+package com.example.catalogue.feed.components.recipe_collection_list
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.add
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.catalogue.feed.components.recipe_collection_list.components.recipe_collection.RecipeCollection
 import com.example.components.JustDivider
 import com.example.data.models.Recipe
 import com.example.data.models.RecipeCollection

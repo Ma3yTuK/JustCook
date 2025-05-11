@@ -50,7 +50,7 @@ import com.example.components.JustButton
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.Recipe
 import com.example.components.JustDivider
-import com.example.components.RecipeImage
+import com.example.components.JustImage
 
 @Composable
 fun SearchResults(
@@ -95,7 +95,7 @@ private fun SearchResult(
                 }
             )
         }
-        RecipeImage(
+        JustImage(
             contentDescription = null,
             modifier = Modifier
                 .size(100.dp)
@@ -124,7 +124,7 @@ private fun SearchResult(
             }
         )
         Text(
-            text = recipe.tagline,
+            text = recipe.calories.toString(),
             style = MaterialTheme.typography.bodyLarge,
             color = JustCookColorPalette.colors.textHelp,
             modifier = Modifier.constrainAs(tag) {

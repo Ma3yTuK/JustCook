@@ -1,4 +1,4 @@
-package com.example.search.navigation
+package com.example.favourite.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder

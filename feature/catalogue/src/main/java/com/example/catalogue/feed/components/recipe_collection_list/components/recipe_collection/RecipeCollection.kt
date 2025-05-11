@@ -1,20 +1,13 @@
-package com.example.catalogue.components
+package com.example.catalogue.feed.components.recipe_collection_list.components.recipe_collection
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -29,15 +22,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.catalogue.RecipeSharedElementKey
-import com.example.catalogue.RecipeSharedElementType
-import com.example.components.springs.nonSpatialExpressiveSpring
-import com.example.catalogue.recipeDetailBoundsTransform
+import com.example.catalogue.feed.components.recipe_collection_list.components.recipe_collection.components.highlight_recipe_item.HighlightRecipeItem
+import com.example.catalogue.feed.components.recipe_collection_list.components.recipe_collection.components.RecipeItem
+import com.example.catalogue.feed.components.recipe_collection_list.components.recipe_collection.components.highlight_recipe_item.components.card_top.cardWidthWithPaddingPx
 import com.example.data.models.Recipe
 import com.example.data.models.RecipeCollection
 import com.example.data.models.CollectionType
-import com.example.components.LocalSharedTransitionScope
-import com.example.components.LocalNavAnimatedVisibilityScope
 import com.example.components.theme.JustCookColorPalette
 
 @Composable

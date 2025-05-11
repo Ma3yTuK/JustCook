@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/feature" />
             <option value="$PROJECT_DIR$/feature/catalogue" />
             <option value="$PROJECT_DIR$/feature/favorite" />
+            <option value="$PROJECT_DIR$/feature/profile" />
             <option value="$PROJECT_DIR$/feature/search" />
             <option value="$PROJECT_DIR$/utils" />
           </set>
