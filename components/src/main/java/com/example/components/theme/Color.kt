@@ -49,6 +49,11 @@ val Lavender2 = Color(0xffdebbfd)
 val Lavender1 = Color(0xffebd6fe)
 val Lavender0 = Color(0xfff9f2ff)
 
+val Gold1 = Color(0xFFFFF9C4)
+val Gold2 = Color(0xFFFFD700)
+val Gold3 = Color(0xFFFFB300)
+val Gold4 = Color(0xFFF57F17)
+
 val Rose11 = Color(0xff7f0054)
 val Rose10 = Color(0xff97005c)
 val Rose9 = Color(0xffaf0060)

@@ -1,4 +1,4 @@
-package com.example.catalogue.feed.components.recipe_collection_list.components.recipe_collection.components.highlight_recipe_item.components.card_contentent.components
+package com.example.components.entity_collection_view.components.recipe_item.components.card_contentent.components
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -12,12 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.catalogue.R
-import com.example.catalogue.recipe_detail.RecipeSharedElementKey
-import com.example.catalogue.recipe_detail.RecipeSharedElementType
-import com.example.catalogue.recipe_detail.recipeDetailBoundsTransform
 import com.example.components.LocalNavAnimatedVisibilityScope
 import com.example.components.LocalSharedTransitionScope
+import com.example.components.R
+import com.example.components.entity_collection_view.components.recipe_item.RecipeSharedElementKey
+import com.example.components.entity_collection_view.components.recipe_item.RecipeSharedElementType
+import com.example.components.entity_collection_view.components.recipe_item.recipeDetailBoundsTransform
 import com.example.components.springs.nonSpatialExpressiveSpring
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.Recipe

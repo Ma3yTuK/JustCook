@@ -1,4 +1,4 @@
-package com.example.catalogue.feed.components.recipe_collection_list.components.recipe_collection.components.highlight_recipe_item.components.card_top
+package com.example.components.entity_collection_view.components.recipe_item.components.card_top
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -12,10 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.catalogue.recipe_detail.RecipeSharedElementKey
-import com.example.catalogue.recipe_detail.RecipeSharedElementType
 import com.example.components.springs.nonSpatialExpressiveSpring
-import com.example.catalogue.recipe_detail.recipeDetailBoundsTransform
 import com.example.components.LocalNavAnimatedVisibilityScope
 import com.example.components.LocalSharedTransitionScope
 import com.example.data.models.Recipe
@@ -24,8 +21,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.unit.Density
-import com.example.catalogue.feed.components.recipe_collection_list.components.recipe_collection.components.highlight_recipe_item.HighlightCardWidth
+import com.example.components.entity_collection_view.components.recipe_item.HighlightCardWidth
 import com.example.components.JustImage
+import com.example.components.entity_collection_view.components.recipe_item.RecipeSharedElementKey
+import com.example.components.entity_collection_view.components.recipe_item.RecipeSharedElementType
+import com.example.components.entity_collection_view.components.recipe_item.recipeDetailBoundsTransform
 
 val HighlightCardPadding = 16.dp
 val Density.cardWidthWithPaddingPx

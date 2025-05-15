@@ -4,4 +4,10 @@
     <string name="my_recipes">Мои рецепты</string>
     <string name="favorites">Избранное</string>
     <string name="logout">Выход</string>
+    <string name="stop_editing">Сохранить</string>
+    <string name="cancel_edit">Отменить</string>
+    <string name="edit">Изменить имя</string>
+    <string name="edit_user_name">Введите новое имя пользователя</string>
+    <string name="save">Сохранить</string>
+    <string name="create_recipe">Создать рецепт</string>
 </resources>

@@ -1,6 +1,7 @@
-package com.example.catalogue.feed.components.recipe_collection_list.components.recipe_collection.components.highlight_recipe_item
+package com.example.components.entity_collection_view.components.recipe_item
 
 import androidx.compose.animation.EnterExitState
+import androidx.compose.animation.BoundsTransform
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -14,9 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.catalogue.recipe_detail.RecipeSharedElementKey
-import com.example.catalogue.recipe_detail.RecipeSharedElementType
-import com.example.catalogue.recipe_detail.recipeDetailBoundsTransform
 import com.example.components.LocalNavAnimatedVisibilityScope
 import com.example.components.LocalSharedTransitionScope
 import com.example.data.models.Recipe
@@ -25,16 +23,37 @@ import androidx.compose.animation.core.animateDp
 import androidx.compose.foundation.border
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-import com.example.catalogue.feed.components.recipe_collection_list.components.recipe_collection.components.highlight_recipe_item.components.card_contentent.CardContent
-import com.example.catalogue.feed.components.recipe_collection_list.components.recipe_collection.components.highlight_recipe_item.components.card_top.CardTop
+import com.example.components.entity_collection_view.components.recipe_item.components.card_contentent.CardContent
+import com.example.components.entity_collection_view.components.recipe_item.components.card_top.CardTop
 import com.example.components.JustCard
+import com.example.components.springs.spatialExpressiveSpring
 import com.example.components.theme.JustCookColorPalette
 
 val HighlightCardWidth = 170.dp
 
+data class RecipeSharedElementKey(
+    val recipeId: Long,
+    val type: RecipeSharedElementType,
+    val collectionId: Long = 0
+)
+
+enum class RecipeSharedElementType {
+    Bounds,
+    Image,
+    Title,
+    Calories,
+    Rating,
+    Background
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+val recipeDetailBoundsTransform = BoundsTransform { _, _ ->
+    spatialExpressiveSpring()
+}
+
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun HighlightRecipeItem(
+fun RecipeItem(
     index: Int,
     collectionId: Long,
     recipe: Recipe,

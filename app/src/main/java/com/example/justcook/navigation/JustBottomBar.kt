@@ -19,6 +19,8 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.ShoppingCart
@@ -53,6 +55,7 @@ import com.example.components.springs.spatialExpressiveSpring
 import com.example.components.theme.JustCookColorPalette
 import com.example.components.JustSurface
 import com.example.catalogue.navigation.FeedRoute
+import com.example.favorite.navigation.FavoriteRoute
 import com.example.profile.navigation.ProfileRoute
 import com.example.search.navigation.SearchRoute
 import java.util.Locale
@@ -71,7 +74,7 @@ enum class HomeSection(
 ) {
     FEED(R.string.home_feed, Catalogue::class.qualifiedName!!, Icons.Outlined.Home, Catalogue),
     SEARCH(R.string.home_search, SearchRoute::class.qualifiedName!!, Icons.Outlined.Search, SearchRoute),
-    CART(R.string.home_cart, Catalogue::class.qualifiedName!!, Icons.Outlined.ShoppingCart, Catalogue),
+    Favorite(R.string.favorite, FavoriteRoute::class.qualifiedName!!, Icons.Outlined.FavoriteBorder, FavoriteRoute),
     PROFILE(R.string.home_profile, ProfileRoute::class.qualifiedName!!, Icons.Outlined.AccountCircle, ProfileRoute)
 }
 

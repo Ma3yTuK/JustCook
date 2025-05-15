@@ -2,10 +2,10 @@
     <string name="label_back">Back</string>
 
     <!-- Home Tabs -->
-    <string name="home_feed">Home</string>
-    <string name="home_search">Search</string>
+    <string name="home_feed">Каталог</string>
+    <string name="home_search">Поиск</string>
     <string name="home_cart">My Cart</string>
-    <string name="home_profile">Profile</string>
+    <string name="home_profile">Профиль</string>
 
     <!-- Home -->
     <string name="label_filters">Filters</string>
@@ -64,4 +64,14 @@
     <string name="rating">Rating</string>
     <string name="alphabetical">Alphabetical</string>
     <string name="close">Close</string>
+    <string name="edit_image">Выберите область</string>
+    <string name="verified_user">Повар JustCook\n</string>
+    <string name="calories">калл</string>
+    <string name="no_recipes">Здесь ничего нет(</string>
+    <string name="add_favourite">Добавить в избранное</string>
+    <string name="remove_favourite">Удалить из избранного</string>
+    <string name="no_users">Здесь ничего нет(\n</string>
+    <string name="status_verified">Повар JustCook</string>
+    <string name="status_not_verified">Любитель</string>
+    <string name="favorite">Избранное</string>
 </resources>

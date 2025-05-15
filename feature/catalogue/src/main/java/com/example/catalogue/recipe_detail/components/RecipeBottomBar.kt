@@ -34,10 +34,11 @@ import com.example.data.models.Recipe
 @Composable
 fun RecipeBottomBar(
     recipe: Recipe,
-    onToggleFavouritePress: () -> Unit,
+    onToggleFavoritePress: () -> Unit,
     isInEditMode: Boolean,
     onSaveRecipe: () -> Unit,
     onRemoveRecipe: () -> Unit,
+    isValid: Boolean,
     modifier: Modifier = Modifier
 ) {
     val sharedTransitionScope =
@@ -72,6 +73,7 @@ fun RecipeBottomBar(
                         if (isInEditMode) {
                             JustButton(
                                 onClick = onSaveRecipe,
+                                enabled = isValid,
                                 modifier = Modifier
                                     .weight(1f)
                                     .padding(5.dp)
@@ -100,11 +102,11 @@ fun RecipeBottomBar(
 
                         } else {
                             JustButton(
-                                onClick = onToggleFavouritePress,
+                                onClick = onToggleFavoritePress,
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Text(
-                                    text = if (recipe.isFavourite) stringResource(R.string.remove_from_favourite) else stringResource(R.string.add_to_favourite),
+                                    text = if (recipe.isFavorite) stringResource(R.string.remove_from_favourite) else stringResource(R.string.add_to_favourite),
                                     modifier = Modifier.fillMaxWidth(),
                                     textAlign = TextAlign.Center,
                                     maxLines = 1

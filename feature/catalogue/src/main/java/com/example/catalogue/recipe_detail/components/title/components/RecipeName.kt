@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,11 +39,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.catalogue.R
 import com.example.catalogue.recipe_detail.HzPadding
-import com.example.catalogue.recipe_detail.RecipeSharedElementKey
-import com.example.catalogue.recipe_detail.RecipeSharedElementType
-import com.example.catalogue.recipe_detail.recipeDetailBoundsTransform
 import com.example.components.LocalNavAnimatedVisibilityScope
 import com.example.components.LocalSharedTransitionScope
+import com.example.components.entity_collection_view.components.recipe_item.RecipeSharedElementKey
+import com.example.components.entity_collection_view.components.recipe_item.RecipeSharedElementType
+import com.example.components.entity_collection_view.components.recipe_item.recipeDetailBoundsTransform
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.Recipe
 
@@ -78,7 +79,6 @@ fun RecipeName(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
-                    .weight(1f)
                     .sharedBounds(
                         rememberSharedContentState(
                             key = RecipeSharedElementKey(
@@ -91,6 +91,8 @@ fun RecipeName(
                         boundsTransform = recipeDetailBoundsTransform
                     )
             )
+
+            Spacer(Modifier.weight(1f))
 
             if (isInEditMode) {
                 IconButton(onClick = {

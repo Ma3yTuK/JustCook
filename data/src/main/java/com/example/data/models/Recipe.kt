@@ -10,7 +10,9 @@ import kotlinx.serialization.Serializable
     val calories: Long,
     val rating: Float,
     val description: String,
-    val isFavourite: Boolean,
+    val isFavorite: Boolean,
+    val isPremium: Boolean,
+    val user: User,
     val steps: List<RecipeStep>,
     val ingredients: List<RecipeIngredient>,
     val reviews: List<Review>

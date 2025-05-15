@@ -3,10 +3,10 @@
     <string name="label_edit">Toggle edit</string>
 
     <!-- Home Tabs -->
-    <string name="home_feed">Home</string>
-    <string name="home_search">Search</string>
+    <string name="home_feed">Каталог</string>
+    <string name="home_search">Поиск</string>
     <string name="home_cart">My Cart</string>
-    <string name="home_profile">Profile</string>
+    <string name="home_profile">Профиль</string>
     <string name="calories">ккал</string>
 
     <!-- Home -->
@@ -102,4 +102,12 @@
     <string name="ingredient">Ингредиент</string>
     <string name="select_ingredient">Выберите ингредиент</string>
     <string name="add">Добавить</string>
+    <string name="edit_step_description">Описание шага</string>
+    <string name="step_description_hint">Что нужно сделать</string>
+    <string name="edit_step">Редактировать</string>
+    <string name="delete_step">Удалить</string>
+    <string name="add_step">Добавить шаг</string>
+    <string name="user_recipes">Рецепты пользователя</string>
+    <string name="status_verified">Повар JustCook</string>
+    <string name="status_not_verified">Любитель</string>
 </resources>

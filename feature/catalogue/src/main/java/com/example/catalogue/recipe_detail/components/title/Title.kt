@@ -35,13 +35,10 @@ import com.example.catalogue.R
 import com.example.catalogue.recipe_detail.HzPadding
 import com.example.catalogue.recipe_detail.MaxTitleOffset
 import com.example.catalogue.recipe_detail.MinTitleOffset
-import com.example.catalogue.recipe_detail.RecipeSharedElementKey
-import com.example.catalogue.recipe_detail.RecipeSharedElementType
 import com.example.catalogue.recipe_detail.TitleHeight
 import com.example.catalogue.recipe_detail.components.title.components.RecipeCalories
 import com.example.catalogue.recipe_detail.components.title.components.RecipeName
 import com.example.catalogue.recipe_detail.components.title.components.Stars
-import com.example.catalogue.recipe_detail.recipeDetailBoundsTransform
 import com.example.components.JustDivider
 import com.example.components.LocalNavAnimatedVisibilityScope
 import com.example.components.LocalSharedTransitionScope

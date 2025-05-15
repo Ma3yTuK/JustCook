@@ -1,5 +1,6 @@
 package com.example.catalogue.recipe_detail
 
+import android.net.Uri
 import androidx.compose.animation.BoundsTransform
 import androidx.compose.animation.EnterExitState
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -27,10 +28,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import com.example.catalogue.R
@@ -40,11 +37,16 @@ import com.example.catalogue.recipe_detail.components.image.Image
 import com.example.catalogue.recipe_detail.components.RecipeBottomBar
 import com.example.catalogue.recipe_detail.components.title.Title
 import com.example.components.OnTopButton
+import com.example.components.entity_collection_view.components.recipe_item.RecipeSharedElementKey
+import com.example.components.entity_collection_view.components.recipe_item.RecipeSharedElementType
+import com.example.components.entity_collection_view.components.recipe_item.recipeDetailBoundsTransform
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.Ingredient
 import com.example.data.models.IngredientIngredientConversion
 import com.example.data.models.RecipeIngredient
+import com.example.data.models.RecipeStep
 import com.example.data.models.Review
+import com.example.data.models.User
 
 val BottomBarHeight = 40.dp
 val TitleHeight = 128.dp
@@ -57,26 +59,6 @@ val ExpandedImageSize = 300.dp
 val CollapsedImageSize = 150.dp
 val HzPadding = Modifier.padding(horizontal = 24.dp)
 
-data class RecipeSharedElementKey(
-    val recipeId: Long,
-    val type: RecipeSharedElementType,
-    val collectionId: Long = 0
-)
-
-enum class RecipeSharedElementType {
-    Bounds,
-    Image,
-    Title,
-    Calories,
-    Rating,
-    Background
-}
-
-@OptIn(ExperimentalSharedTransitionApi::class)
-val recipeDetailBoundsTransform = BoundsTransform { _, _ ->
-    spatialExpressiveSpring()
-}
-
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun RecipeDetail(
@@ -85,22 +67,29 @@ fun RecipeDetail(
     canDeleteReview: (Review) -> Boolean,
     onDeleteReview: (Long) -> Unit,
     onSubmitReview: (rating: Float, comment: String) -> Unit,
+    onUserClick: (User) -> Unit,
     onNameChange: (String) -> Unit,
+    onChangeRecipeImage: (Uri) -> Unit,
     onChangeDescription: (String) -> Unit,
     getConversionsForIngredient: (Ingredient) -> List<IngredientIngredientConversion>,
     setIngredientConversion: (RecipeIngredient, IngredientIngredientConversion?) -> Unit,
     setIngredientAmount: (RecipeIngredient, Float) -> Unit,
     onDeleteIngredient: (RecipeIngredient) -> Unit,
+    setStepDescription: (RecipeStep, String) -> Unit,
+    setStepImage: (RecipeStep, Uri) -> Unit,
+    onDeleteStep: (RecipeStep) -> Unit,
+    addStep: (String) -> Unit,
     addIngredient: (Ingredient, Float, IngredientIngredientConversion?) -> Unit,
     allIngredients: List<Ingredient>,
     isLoggedIn: Boolean,
     isInEditMode: Boolean,
     canEdit: Boolean,
     upPress: () -> Unit,
-    onToggleFavouritePress: () -> Unit,
+    onToggleFavoritePress: () -> Unit,
     onEdit: () -> Unit,
     onSaveEdit: () -> Unit,
     onCancelEdit: () -> Unit,
+    isValid: Boolean,
     modifier: Modifier = Modifier
 ) {
     val sharedTransitionScope = LocalSharedTransitionScope.current
@@ -139,10 +128,10 @@ fun RecipeDetail(
         ) {
             val scroll = rememberScrollState(0)
 
-            Header(recipe.id, collectionId)
-            Body(recipe, canDeleteReview, onDeleteReview, onSubmitReview, onChangeDescription, getConversionsForIngredient, setIngredientConversion, setIngredientAmount, onDeleteIngredient, addIngredient, allIngredients, isLoggedIn, isInEditMode, scroll)
+            Header(recipe, collectionId)
+            Body(recipe, canDeleteReview, onDeleteReview, onSubmitReview, onUserClick, onChangeDescription, getConversionsForIngredient, setIngredientConversion, setIngredientAmount, onDeleteIngredient, setStepDescription, setStepImage, onDeleteStep, addStep, addIngredient, allIngredients, isLoggedIn, isInEditMode, scroll)
             Title(recipe, collectionId, isInEditMode, onNameChange) { scroll.value }
-            Image(recipe.id, collectionId) { scroll.value }
+            Image(recipe.id, collectionId, isInEditMode, onChangeRecipeImage) { scroll.value }
             OnTopButton(
                 onPress = upPress,
                 painter = rememberVectorPainter(Icons.AutoMirrored.Outlined.ArrowBack),
@@ -167,7 +156,7 @@ fun RecipeDetail(
                         )
                     }
                 }
-                RecipeBottomBar(recipe, onToggleFavouritePress, isInEditMode, onSaveEdit, onCancelEdit, modifier = Modifier.align(Alignment.BottomCenter))
+                RecipeBottomBar(recipe, onToggleFavoritePress, isInEditMode, onSaveEdit, onCancelEdit, isValid, modifier = Modifier.align(Alignment.BottomCenter))
             }
         }
     }

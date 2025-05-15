@@ -2,15 +2,15 @@ package com.example.data.services
 
 import com.example.data.models.Authorities
 import com.example.data.models.Authority
-import com.example.data.models.CollectionType
 import com.example.data.models.Ingredient
 import com.example.data.models.MeasurementUnit
 import com.example.data.models.Recipe
-import com.example.data.models.RecipeCollection
+import com.example.data.models.collections.RecipeCollection
 import com.example.data.models.RecipeIngredient
 import com.example.data.models.RecipeStep
 import com.example.data.models.Review
 import com.example.data.models.User
+import com.example.data.models.collections.UserCollection
 import kotlinx.datetime.LocalDateTime
 
 object RecipeService {
@@ -34,19 +34,25 @@ object RecipeService {
         id = 1,
         name = "Алиса Алиса Алиса Алиса Алиса Алиса Алиса Алиса Алиса Алиса ",
         email = "alice@gmail.com",
-        authorities = listOf(authModerate)
+        authorities = listOf(authModerate),
+        isVerified = true,
+        hasPremium = true
     )
     val userBob = User(
         id = 2,
         name = "Боб",
         email = "bob@gmail.com",
-        authorities = emptyList()
+        authorities = emptyList(),
+        isVerified = false,
+        hasPremium = false
     )
     val userCarol = User(
         id = 3,
         name = "Кэрол",
         email = "hardtospell@gmail.com",
-        authorities = listOf(authModerate)
+        authorities = listOf(authModerate),
+        isVerified = true,
+        hasPremium = true
     )
 
     // Шаги приготовления
@@ -106,14 +112,16 @@ object RecipeService {
     // Рецепты
     val pancakes = Recipe(
         id = 1,
-        name = "Классические блины",
+        name = "Классические блины Классические блины Классические блины",
         calories = 350,
         rating = 4.5f,
         description = "Мягкие и нежные блины на молоке.",
-        isFavourite = true,
+        isFavorite = true,
         steps = stepsPancakes,
         ingredients = ingredientsPancakes,
-        reviews = listOf(review1, review2)
+        reviews = listOf(review1, review2),
+        user = userAlice,
+        isPremium = true
     )
 
     val omelet = Recipe(
@@ -122,25 +130,31 @@ object RecipeService {
         calories = 200,
         rating = 4.8f,
         description = "Пушистый омлет с молоком.",
-        isFavourite = false,
+        isFavorite = false,
         steps = stepsOmelet,
         ingredients = ingredientsOmelet,
-        reviews = listOf(review3)
+        reviews = listOf(review3),
+        user = userBob,
+        isPremium = false
     )
 
     // Коллекции рецептов
     val breakfastCollection = RecipeCollection(
         id = 1,
         name = "Завтраки",
-        recipes = listOf(pancakes, omelet),
-        type = CollectionType.Highlight
+        entities = listOf(pancakes, omelet)
+    )
+
+    val verifiedUsers = UserCollection(
+        id = 2,
+        name = "Повары JustCook",
+        entities = listOf(userAlice, userCarol)
     )
 
     val normalCollection = RecipeCollection(
-        id = 2,
+        id = 3,
         name = "Простые рецепты",
-        recipes = listOf(pancakes),
-        type = CollectionType.Normal
+        entities = listOf(pancakes)
     )
 
     // Список всех созданных объектов
@@ -148,5 +162,7 @@ object RecipeService {
     val allIngredients = listOf(flour, sugar, salt, milk, egg, butter)
     val allUsers = listOf(userAlice, userBob, userCarol)
     val allRecipes = listOf(pancakes, omelet)
-    val allCollections = listOf(breakfastCollection, normalCollection)
+    val allCollections = listOf(breakfastCollection, verifiedUsers, normalCollection)
+    val allRecipeCollections = listOf(breakfastCollection, normalCollection)
+    val allUserCollections = listOf(verifiedUsers)
 }

@@ -29,9 +29,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import androidx.navigation.NavDestination
+import androidx.navigation.NavGraph
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -43,7 +48,6 @@ import com.example.components.springs.spatialExpressiveSpring
 import com.example.components.springs.nonSpatialExpressiveSpring
 import com.example.justcook.navigation.JustBottomBar
 import com.example.justcook.navigation.HomeSection
-import com.example.justcook.navigation.findStartDestination
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalSharedTransitionApi::class)
@@ -53,13 +57,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             JustCookTheme {
                 val navController: NavHostController = rememberNavController()
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = remember { mutableStateOf(HomeSection.FEED.stringRoute) }
 
                 SharedTransitionLayout {
-                    AnimatedContent(navBackStackEntry?.destination?.parent?.route) { currentRoute ->
+                    AnimatedVisibility(visible = true) {
                         CompositionLocalProvider(
                             LocalSharedTransitionScope provides this@SharedTransitionLayout,
-                            LocalNavAnimatedVisibilityScope provides this@AnimatedContent
+                            LocalNavAnimatedVisibilityScope provides this@AnimatedVisibility
                         ) {
                             val sharedTransitionScope = LocalSharedTransitionScope.current
                                 ?: throw IllegalStateException("No SharedElementScope found")
@@ -72,23 +76,21 @@ class MainActivity : ComponentActivity() {
                                         with(sharedTransitionScope) {
                                             JustBottomBar(
                                                 tabs = HomeSection.entries.toTypedArray(),
-                                                currentRoute = currentRoute
-                                                    ?: HomeSection.FEED.stringRoute,
+                                                currentRoute = currentRoute.value,
                                                 navigateToRoute = { route ->
-                                                    if (route.stringRoute != navController.currentDestination?.parent?.route) {
+                                                    if (route.stringRoute != currentRoute.value) {
                                                         navController.navigate(route.route) {
                                                             launchSingleTop = true
                                                             restoreState = true
                                                             // Pop up backstack to the first destination and save state. This makes going back
                                                             // to the start destination when pressing back in any other bottom tab.
                                                             popUpTo(
-                                                                findStartDestination(
-                                                                    navController.graph
-                                                                ).id
+                                                                currentRoute.value
                                                             ) {
                                                                 saveState = true
                                                             }
                                                         }
+                                                        currentRoute.value = route.stringRoute
                                                     }
                                                 },
                                                 modifier = Modifier

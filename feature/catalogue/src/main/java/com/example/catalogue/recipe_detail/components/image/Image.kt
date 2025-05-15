@@ -8,22 +8,25 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import android.net.Uri
 import com.example.catalogue.recipe_detail.HzPadding
 import com.example.catalogue.recipe_detail.MaxTitleOffset
 import com.example.catalogue.recipe_detail.MinTitleOffset
-import com.example.catalogue.recipe_detail.RecipeSharedElementKey
-import com.example.catalogue.recipe_detail.RecipeSharedElementType
 import com.example.catalogue.recipe_detail.components.image.components.CollapsingImageLayout
-import com.example.catalogue.recipe_detail.recipeDetailBoundsTransform
 import com.example.components.LocalNavAnimatedVisibilityScope
 import com.example.components.LocalSharedTransitionScope
 import com.example.components.JustImage
+import com.example.components.entity_collection_view.components.recipe_item.RecipeSharedElementKey
+import com.example.components.entity_collection_view.components.recipe_item.RecipeSharedElementType
+import com.example.components.entity_collection_view.components.recipe_item.recipeDetailBoundsTransform
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun Image(
     recipeId: Long,
     collectionId: Long,
+    isInEditMode: Boolean,
+    onChangeRecipeImage: (Uri) -> Unit,
     scrollProvider: () -> Int
 ) {
     val collapseRange = with(LocalDensity.current) { (MaxTitleOffset - MinTitleOffset).toPx() }
@@ -43,6 +46,8 @@ fun Image(
         with(sharedTransitionScope) {
             JustImage(
                 contentDescription = null,
+                onImageChange = onChangeRecipeImage,
+                isEditable = isInEditMode,
                 modifier = Modifier
                     .sharedBounds(
                         rememberSharedContentState(

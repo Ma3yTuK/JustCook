@@ -1,37 +1,55 @@
-package com.example.catalogue.feed.components.recipe_collection_list.components.recipe_collection.components
+package com.example.components.entity_collection_view.components
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.BoundsTransform
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.catalogue.recipe_detail.RecipeSharedElementKey
-import com.example.catalogue.recipe_detail.RecipeSharedElementType
 import com.example.components.springs.nonSpatialExpressiveSpring
-import com.example.catalogue.recipe_detail.recipeDetailBoundsTransform
 import com.example.components.LocalNavAnimatedVisibilityScope
 import com.example.components.LocalSharedTransitionScope
 import com.example.data.models.Recipe
 import com.example.components.JustImage
 import com.example.components.JustSurface
+import com.example.components.springs.spatialExpressiveSpring
 import com.example.components.theme.JustCookColorPalette
+import com.example.data.models.User
+
+data class UserSharedElementKey(
+    val userId: Long,
+    val type: UserSharedElementType,
+    val collectionId: Long = 0
+)
+
+enum class UserSharedElementType {
+    Image,
+    Title
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+val userDetailBoundsTransform = BoundsTransform { _, _ ->
+    spatialExpressiveSpring()
+}
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun RecipeItem(
+fun UserItem(
     collectionId: Long,
-    recipe: Recipe,
-    onRecipeClick: (Recipe, Long) -> Unit,
+    user: User,
+    onUserClick: (User, Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     JustSurface(
@@ -52,39 +70,42 @@ fun RecipeItem(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .clickable(onClick = {
-                        onRecipeClick(recipe, collectionId)
+                        onUserClick(user, collectionId)
                     })
                     .padding(8.dp)
             ) {
                 JustImage(
                     elevation = 1.dp,
                     contentDescription = null,
+                    isVerified = user.isVerified,
                     modifier = Modifier
                         .size(120.dp)
                         .sharedBounds(
                             rememberSharedContentState(
-                                key = RecipeSharedElementKey(
-                                    recipeId = recipe.id,
-                                    type = RecipeSharedElementType.Image,
+                                key = UserSharedElementKey(
+                                    userId = user.id,
+                                    type = UserSharedElementType.Image,
                                     collectionId = collectionId
                                 )
                             ),
                             animatedVisibilityScope = animatedVisibilityScope,
-                            boundsTransform = recipeDetailBoundsTransform
+                            boundsTransform = userDetailBoundsTransform
                         )
                 )
                 Text(
-                    text = recipe.name,
+                    text = user.name,
                     style = MaterialTheme.typography.titleMedium,
                     color = JustCookColorPalette.colors.textSecondary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
                         .padding(top = 8.dp)
-                        .wrapContentWidth()
+                        .widthIn(max = 100.dp)
                         .sharedBounds(
                             rememberSharedContentState(
-                                key = RecipeSharedElementKey(
-                                    recipeId = recipe.id,
-                                    type = RecipeSharedElementType.Title,
+                                key = UserSharedElementKey(
+                                    userId = user.id,
+                                    type = UserSharedElementType.Title,
                                     collectionId = collectionId
                                 )
                             ),
@@ -92,7 +113,7 @@ fun RecipeItem(
                             enter = fadeIn(nonSpatialExpressiveSpring()),
                             exit = fadeOut(nonSpatialExpressiveSpring()),
                             resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(),
-                            boundsTransform = recipeDetailBoundsTransform
+                            boundsTransform = userDetailBoundsTransform
                         )
                 )
             }

@@ -1,5 +1,6 @@
 package com.example.catalogue.recipe_detail.components.body
 
+import android.net.Uri
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import com.example.catalogue.recipe_detail.GradientScroll
 import com.example.catalogue.recipe_detail.ImageOverlap
 import com.example.catalogue.recipe_detail.MinTitleOffset
 import com.example.catalogue.recipe_detail.TitleHeight
+import com.example.catalogue.recipe_detail.components.body.components.Author
 import com.example.catalogue.recipe_detail.components.body.components.description.Description
 import com.example.catalogue.recipe_detail.components.body.components.ingredients.Ingredients
 import com.example.catalogue.recipe_detail.components.body.components.reviews.Reviews
@@ -29,7 +31,9 @@ import com.example.data.models.Ingredient
 import com.example.data.models.IngredientIngredientConversion
 import com.example.data.models.Recipe
 import com.example.data.models.RecipeIngredient
+import com.example.data.models.RecipeStep
 import com.example.data.models.Review
+import com.example.data.models.User
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -38,11 +42,16 @@ fun Body(
     canDeleteReview: (Review) -> Boolean,
     onDeleteReview: (Long) -> Unit,
     onSubmitReview: (rating: Float, comment: String) -> Unit,
+    onUserClick: (User) -> Unit,
     onChangeDescription: (String) -> Unit,
     getConversionsForIngredient: (Ingredient) -> List<IngredientIngredientConversion>,
     setIngredientConversion: (RecipeIngredient, IngredientIngredientConversion?) -> Unit,
     setIngredientAmount: (RecipeIngredient, Float) -> Unit,
     onDeleteIngredient: (RecipeIngredient) -> Unit,
+    setStepDescription: (RecipeStep, String) -> Unit,
+    setStepImage: (RecipeStep, Uri) -> Unit,
+    onDeleteStep: (RecipeStep) -> Unit,
+    addStep: (String) -> Unit,
     addIngredient: (Ingredient, Float, IngredientIngredientConversion?) -> Unit,
     allIngredients: List<Ingredient>,
     isLoggedIn: Boolean,
@@ -72,16 +81,21 @@ fun Body(
                 ) {
                     Column {
                         Spacer(Modifier.height(TitleHeight))
+                        Author(recipe.user, onClick = { onUserClick(recipe.user) })
+
+                        Spacer(Modifier.height(40.dp))
                         Description(recipe, onChangeDescription, isInEditMode)
 
                         Spacer(Modifier.height(40.dp))
                         Ingredients(recipe.ingredients, getConversionsForIngredient, setIngredientConversion, setIngredientAmount, onDeleteIngredient, addIngredient, allIngredients, isInEditMode)
 
                         Spacer(Modifier.height(16.dp))
-                        Steps(recipe.steps)
+                        Steps(recipe.steps, setStepDescription, setStepImage, onDeleteStep, addStep, isInEditMode)
 
-                        Spacer(Modifier.height(32.dp))
-                        Reviews(recipe.reviews, canDeleteReview, onDeleteReview, onSubmitReview, isLoggedIn)
+                        if (!isInEditMode) {
+                            Spacer(Modifier.height(32.dp))
+                            Reviews(recipe.reviews, canDeleteReview, onDeleteReview, onSubmitReview, isLoggedIn)
+                        }
 
                         Spacer(
                             modifier = Modifier

@@ -105,7 +105,7 @@ fun IngredientInfo(
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = stringResource(R.string.delete),
-                    tint = JustCookColorPalette.colors.textHelp,
+                    tint = JustCookColorPalette.colors.error,
                 )
             }
         }

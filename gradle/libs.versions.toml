@@ -29,6 +29,8 @@ runtimeAndroidVersion = "1.8.1"
 navigationCommonAndroid = "2.9.0"
 navigationRuntimeAndroidVersion = "2.9.0"
 navigationComposeAndroid = "2.9.0"
+ucrop = "2.2.8"
+foundationAndroidVersion = "1.8.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -61,10 +63,12 @@ text-flow-modules = { module = "io.github.oleksandrbalan:textflow-material3", ve
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "androidx-constraintlayout" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
 kotlinx-datetime-serialization = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "serializationDate" }
+image-croping = { module = "com.github.yalantis:ucrop", version.ref = "ucrop" }
 runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroidVersion" }
 androidx-navigation-common-android = { group = "androidx.navigation", name = "navigation-common-android", version.ref = "navigationCommonAndroid" }
 navigation-runtime-android = { group = "androidx.navigation", name = "navigation-runtime-android", version.ref = "navigationRuntimeAndroidVersion" }
 androidx-navigation-compose-android = { group = "androidx.navigation", name = "navigation-compose-android", version.ref = "navigationComposeAndroid" }
+foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroidVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -23,24 +23,25 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import com.example.catalogue.recipe_detail.RecipeSharedElementKey
-import com.example.catalogue.recipe_detail.RecipeSharedElementType
-import com.example.catalogue.recipe_detail.recipeDetailBoundsTransform
 import com.example.components.LocalNavAnimatedVisibilityScope
 import com.example.components.LocalSharedTransitionScope
+import com.example.components.entity_collection_view.components.recipe_item.RecipeSharedElementKey
+import com.example.components.entity_collection_view.components.recipe_item.RecipeSharedElementType
+import com.example.components.entity_collection_view.components.recipe_item.recipeDetailBoundsTransform
 import com.example.components.springs.nonSpatialExpressiveSpring
 import com.example.components.theme.JustCookColorPalette
+import com.example.data.models.Recipe
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun Header(recipeId: Long, collectionId: Long) {
+fun Header(recipe: Recipe, collectionId: Long) {
     val sharedTransitionScope = LocalSharedTransitionScope.current
         ?: throw IllegalArgumentException("No Scope found")
     val animatedVisibilityScope = LocalNavAnimatedVisibilityScope.current
         ?: throw IllegalArgumentException("No Scope found")
 
     with(sharedTransitionScope) {
-        val brushColors = JustCookColorPalette.colors.tornado1
+        val brushColors = if (recipe.isPremium) JustCookColorPalette.colors.gradientGold else JustCookColorPalette.colors.tornado1
 
         val infiniteTransition = rememberInfiniteTransition(label = "background")
         val targetOffset = with(LocalDensity.current) {
@@ -60,7 +61,7 @@ fun Header(recipeId: Long, collectionId: Long) {
                 .sharedBounds(
                     rememberSharedContentState(
                         key = RecipeSharedElementKey(
-                            recipeId = recipeId,
+                            recipeId = recipe.id,
                             type = RecipeSharedElementType.Background,
                             collectionId = collectionId
                         )

@@ -41,6 +41,7 @@ android {
 
 dependencies {
 
+    implementation(libs.image.croping)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -55,6 +56,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(project(":feature:search"))
     implementation(project(":feature:profile"))
+    implementation(project(":feature:favorite"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
