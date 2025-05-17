@@ -27,7 +27,7 @@ import com.example.data.models.Recipe
 @Composable
 fun Stars(
     recipe: Recipe,
-    collectionId: Long
+    collectionIndex: Int?
 ) {
     val sharedTransitionScope = LocalSharedTransitionScope.current
         ?: throw IllegalArgumentException("No Scope found")
@@ -44,7 +44,7 @@ fun Stars(
                         key = RecipeSharedElementKey(
                             recipeId = recipe.id,
                             type = RecipeSharedElementType.Rating,
-                            collectionId = collectionId
+                            collectionIndex = collectionIndex
                         )
                     ),
                     animatedVisibilityScope = animatedVisibilityScope,

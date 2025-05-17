@@ -23,8 +23,7 @@ import com.example.data.models.Recipe
 @Composable
 fun RecipeCalories(
     recipe: Recipe,
-    collectionId: Long,
-    isInEditMode: Boolean
+    collectionIndex: Int?
 ) {
     val sharedTransitionScope = LocalSharedTransitionScope.current
         ?: throw IllegalArgumentException("No Scope found")
@@ -44,7 +43,7 @@ fun RecipeCalories(
                         key = RecipeSharedElementKey(
                             recipeId = recipe.id,
                             type = RecipeSharedElementType.Calories,
-                            collectionId = collectionId
+                            collectionIndex = collectionIndex
                         )
                     ),
                     animatedVisibilityScope = animatedVisibilityScope,

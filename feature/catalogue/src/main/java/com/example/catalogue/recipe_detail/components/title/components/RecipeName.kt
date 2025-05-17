@@ -53,7 +53,7 @@ import com.example.data.models.Recipe
 @Composable
 fun RecipeName(
     recipe: Recipe,
-    collectionId: Long,
+    collectionIndex: Int?,
     isInEditMode: Boolean,
     onNameChange: (String) -> Unit
 ) {
@@ -84,7 +84,7 @@ fun RecipeName(
                             key = RecipeSharedElementKey(
                                 recipeId = recipe.id,
                                 type = RecipeSharedElementType.Title,
-                                collectionId = collectionId
+                                collectionIndex = collectionIndex
                             )
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,

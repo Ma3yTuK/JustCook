@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Immutable
 @Serializable
 data class IngredientIngredientConversion(
-    val id: Long,
+    override val id: Long,
     val measurementTo: MeasurementUnit,
     val coefficient: Double
-)
+) : EntityWithId

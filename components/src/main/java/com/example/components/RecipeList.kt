@@ -52,8 +52,8 @@ fun RecipeList(
     showIcon: Boolean,
     modifier: Modifier = Modifier
 ) {
-    CustomizableRecipeList(
-        recipes = recipes,
+    CustomizableItemList(
+        entities = recipes,
         customItem = { recipe ->
             val recipeIcon = if (showIcon) rememberVectorPainter(
                 if (recipe.isFavorite)
@@ -68,36 +68,7 @@ fun RecipeList(
                 iconPainter = recipeIcon
             )
         },
+        key = { it.id },
         modifier = modifier
     )
-}
-
-@Composable
-fun CustomizableRecipeList(
-    recipes: List<Recipe>,
-    customItem: @Composable LazyItemScope.(Recipe) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    LazyColumn(modifier) {
-        if (recipes.isEmpty()) {
-            item(key = "nothing") {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(32.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.no_recipes),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = JustCookColorPalette.colors.textHelp
-                    )
-                }
-            }
-        } else {
-            items(recipes, key = { it.id }) { recipe ->
-                customItem(recipe)
-            }
-        }
-    }
 }

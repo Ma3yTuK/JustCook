@@ -25,7 +25,7 @@ import com.example.data.models.Recipe
 @Composable
 fun CardTitle(
     recipe: Recipe,
-    collectionId: Long
+    collectionIndex: Int
 ) {
     val animatedVisibilityScope = LocalNavAnimatedVisibilityScope.current
         ?: throw IllegalStateException("No Scope found")
@@ -46,7 +46,7 @@ fun CardTitle(
                         key = RecipeSharedElementKey(
                             recipeId = recipe.id,
                             type = RecipeSharedElementType.Title,
-                            collectionId = collectionId
+                            collectionIndex = collectionIndex
                         )
                     ),
                     animatedVisibilityScope = animatedVisibilityScope,

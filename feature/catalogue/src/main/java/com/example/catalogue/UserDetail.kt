@@ -40,7 +40,7 @@ import com.example.components.entity_collection_view.components.userDetailBounds
 @Composable
 fun UserDetail(
     user: User,
-    collectionId: Long,
+    collectionIndex: Int?,
     recipes: List<Recipe>,
     onRecipeClick: (Recipe) -> Unit,
     onFavoriteClick: (Recipe) -> Unit,
@@ -71,7 +71,7 @@ fun UserDetail(
                                 key = UserSharedElementKey(
                                     userId = user.id,
                                     type = UserSharedElementType.Image,
-                                    collectionId = collectionId
+                                    collectionIndex = collectionIndex
                                 )
                             ),
                             animatedVisibilityScope = animatedVisibilityScope,
@@ -94,7 +94,7 @@ fun UserDetail(
                             key = UserSharedElementKey(
                                 userId = user.id,
                                 type = UserSharedElementType.Title,
-                                collectionId = collectionId
+                                collectionIndex = collectionIndex
                             )
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,

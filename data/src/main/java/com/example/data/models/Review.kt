@@ -7,9 +7,9 @@ import kotlinx.serialization.Serializable
 @Immutable
 @Serializable
 data class Review(
-    val id: Long,
+    override val id: Long,
     val rating: Long,
     val comment: String,
     val date: LocalDateTime,
     val user: User
-)
+) : EntityWithId

@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.example.search
+package com.example.search.search_page.components
 
-import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -31,15 +30,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.components.theme.JustCookColorPalette
-import com.example.data.models.SearchSuggestionGroup
+import com.example.data.models.search_suggestions.SearchSuggestion
+import com.example.data.models.search_suggestions.SearchSuggestionGroup
 
 @Composable
 fun SearchSuggestions(
     suggestions: List<SearchSuggestionGroup>,
-    onSuggestionSelect: (String) -> Unit
+    onSuggestionSelect: (SearchSuggestion) -> Unit
 ) {
     LazyColumn {
         suggestions.forEach { suggestionGroup ->
@@ -78,12 +77,12 @@ private fun SuggestionHeader(
 
 @Composable
 private fun Suggestion(
-    suggestion: String,
-    onSuggestionSelect: (String) -> Unit,
+    suggestion: SearchSuggestion,
+    onSuggestionSelect: (SearchSuggestion) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Text(
-        text = suggestion,
+        text = suggestion.suggestion,
         style = MaterialTheme.typography.titleMedium,
         modifier = modifier
             .heightIn(min = 48.dp)

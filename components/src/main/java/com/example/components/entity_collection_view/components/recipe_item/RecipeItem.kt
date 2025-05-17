@@ -34,7 +34,7 @@ val HighlightCardWidth = 170.dp
 data class RecipeSharedElementKey(
     val recipeId: Long,
     val type: RecipeSharedElementType,
-    val collectionId: Long = 0
+    val collectionIndex: Int? = null
 )
 
 enum class RecipeSharedElementType {
@@ -55,9 +55,9 @@ val recipeDetailBoundsTransform = BoundsTransform { _, _ ->
 @Composable
 fun RecipeItem(
     index: Int,
-    collectionId: Long,
+    collectionIndex: Int,
     recipe: Recipe,
-    onRecipeClick: (Recipe, Long) -> Unit,
+    onRecipeClick: (Recipe, Int) -> Unit,
     gradient: List<Color>,
     scrollProvider: () -> Float,
     modifier: Modifier = Modifier
@@ -86,7 +86,7 @@ fun RecipeItem(
                         key = RecipeSharedElementKey(
                             recipeId = recipe.id,
                             type = RecipeSharedElementType.Bounds,
-                            collectionId = collectionId
+                            collectionIndex = collectionIndex
                         )
                     ),
                     animatedVisibilityScope = animatedVisibilityScope,
@@ -114,15 +114,15 @@ fun RecipeItem(
                     .clickable(onClick = {
                         onRecipeClick(
                             recipe,
-                            collectionId
+                            collectionIndex
                         )
                     })
                     .fillMaxSize()
 
             ) {
-                CardTop(index, recipe, collectionId, gradient, scrollProvider)
+                CardTop(index, recipe, collectionIndex, gradient, scrollProvider)
                 Spacer(modifier = Modifier.height(8.dp))
-                CardContent(recipe, collectionId)
+                CardContent(recipe, collectionIndex)
             }
         }
     }

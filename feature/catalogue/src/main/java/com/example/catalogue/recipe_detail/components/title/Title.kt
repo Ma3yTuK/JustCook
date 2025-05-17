@@ -46,11 +46,10 @@ import com.example.components.springs.nonSpatialExpressiveSpring
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.Recipe
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun Title(
     recipe: Recipe,
-    collectionId: Long,
+    collectionIndex: Int?,
     isInEditMode: Boolean,
     onNameChange: (String) -> Unit,
     scrollProvider: () -> Int
@@ -72,11 +71,11 @@ fun Title(
             .background(JustCookColorPalette.colors.uiBackground)
     ) {
         Spacer(Modifier.height(16.dp))
-        Stars(recipe, collectionId)
+        Stars(recipe, collectionIndex)
         Spacer(Modifier.height(5.dp))
-        RecipeName(recipe, collectionId, isInEditMode, onNameChange)
+        RecipeName(recipe, collectionIndex, isInEditMode, onNameChange)
         Spacer(Modifier.height(5.dp))
-        RecipeCalories(recipe, collectionId, isInEditMode)
+        RecipeCalories(recipe, collectionIndex)
         Spacer(Modifier.height(5.dp))
         JustDivider(modifier = Modifier)
     }

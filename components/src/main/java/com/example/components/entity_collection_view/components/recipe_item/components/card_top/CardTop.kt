@@ -26,6 +26,7 @@ import com.example.components.JustImage
 import com.example.components.entity_collection_view.components.recipe_item.RecipeSharedElementKey
 import com.example.components.entity_collection_view.components.recipe_item.RecipeSharedElementType
 import com.example.components.entity_collection_view.components.recipe_item.recipeDetailBoundsTransform
+import com.example.components.modifiers.offsetGradientBackground
 
 val HighlightCardPadding = 16.dp
 val Density.cardWidthWithPaddingPx
@@ -36,7 +37,7 @@ val Density.cardWidthWithPaddingPx
 fun CardTop(
     index: Int,
     recipe: Recipe,
-    collectionId: Long,
+    collectionIndex: Int,
     gradient: List<Color>,
     scrollProvider: () -> Float,
     modifier: Modifier = Modifier
@@ -59,7 +60,7 @@ fun CardTop(
                             key = RecipeSharedElementKey(
                                 recipeId = recipe.id,
                                 type = RecipeSharedElementType.Background,
-                                collectionId = collectionId
+                                collectionIndex = collectionIndex
                             )
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
@@ -94,7 +95,7 @@ fun CardTop(
                             key = RecipeSharedElementKey(
                                 recipeId = recipe.id,
                                 type = RecipeSharedElementType.Image,
-                                collectionId = collectionId
+                                collectionIndex = collectionIndex
                             )
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
@@ -107,21 +108,4 @@ fun CardTop(
             )
         }
     }
-}
-
-fun Modifier.offsetGradientBackground(
-    colors: List<Color>,
-    width: Density.() -> Float,
-    offset: Density.() -> Float = { 0f }
-) = drawBehind {
-    val actualOffset = offset()
-
-    drawRect(
-        Brush.horizontalGradient(
-            colors = colors,
-            startX = -actualOffset,
-            endX = width() - actualOffset,
-            tileMode = TileMode.Mirror
-        )
-    )
 }

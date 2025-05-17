@@ -31,7 +31,7 @@ import com.example.data.models.User
 data class UserSharedElementKey(
     val userId: Long,
     val type: UserSharedElementType,
-    val collectionId: Long = 0
+    val collectionIndex: Int? = null
 )
 
 enum class UserSharedElementType {
@@ -47,9 +47,9 @@ val userDetailBoundsTransform = BoundsTransform { _, _ ->
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun UserItem(
-    collectionId: Long,
+    collectionIndex: Int,
     user: User,
-    onUserClick: (User, Long) -> Unit,
+    onUserClick: (User, Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     JustSurface(
@@ -70,7 +70,7 @@ fun UserItem(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .clickable(onClick = {
-                        onUserClick(user, collectionId)
+                        onUserClick(user, collectionIndex)
                     })
                     .padding(8.dp)
             ) {
@@ -85,7 +85,7 @@ fun UserItem(
                                 key = UserSharedElementKey(
                                     userId = user.id,
                                     type = UserSharedElementType.Image,
-                                    collectionId = collectionId
+                                    collectionIndex = collectionIndex
                                 )
                             ),
                             animatedVisibilityScope = animatedVisibilityScope,
@@ -106,7 +106,7 @@ fun UserItem(
                                 key = UserSharedElementKey(
                                     userId = user.id,
                                     type = UserSharedElementType.Title,
-                                    collectionId = collectionId
+                                    collectionIndex = collectionIndex
                                 )
                             ),
                             animatedVisibilityScope = animatedVisibilityScope,

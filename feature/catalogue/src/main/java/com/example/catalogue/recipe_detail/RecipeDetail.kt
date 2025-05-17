@@ -63,7 +63,7 @@ val HzPadding = Modifier.padding(horizontal = 24.dp)
 @Composable
 fun RecipeDetail(
     recipe: Recipe,
-    collectionId: Long,
+    collectionIndex: Int?,
     canDeleteReview: (Review) -> Boolean,
     onDeleteReview: (Long) -> Unit,
     onSubmitReview: (rating: Float, comment: String) -> Unit,
@@ -113,7 +113,7 @@ fun RecipeDetail(
                         key = RecipeSharedElementKey(
                             recipeId = recipe.id,
                             type = RecipeSharedElementType.Bounds,
-                            collectionId = collectionId
+                            collectionIndex = collectionIndex
                         )
                     ),
                     animatedVisibilityScope,
@@ -128,10 +128,10 @@ fun RecipeDetail(
         ) {
             val scroll = rememberScrollState(0)
 
-            Header(recipe, collectionId)
+            Header(recipe, collectionIndex)
             Body(recipe, canDeleteReview, onDeleteReview, onSubmitReview, onUserClick, onChangeDescription, getConversionsForIngredient, setIngredientConversion, setIngredientAmount, onDeleteIngredient, setStepDescription, setStepImage, onDeleteStep, addStep, addIngredient, allIngredients, isLoggedIn, isInEditMode, scroll)
-            Title(recipe, collectionId, isInEditMode, onNameChange) { scroll.value }
-            Image(recipe.id, collectionId, isInEditMode, onChangeRecipeImage) { scroll.value }
+            Title(recipe, collectionIndex, isInEditMode, onNameChange) { scroll.value }
+            Image(recipe.id, collectionIndex, isInEditMode, onChangeRecipeImage) { scroll.value }
             OnTopButton(
                 onPress = upPress,
                 painter = rememberVectorPainter(Icons.AutoMirrored.Outlined.ArrowBack),

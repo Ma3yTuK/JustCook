@@ -6,10 +6,10 @@ import kotlinx.serialization.Serializable
 @Immutable
 @Serializable
 data class User(
-    val id: Long,
+    override val id: Long,
     val name: String,
     val email: String,
     val hasPremium: Boolean,
     val isVerified: Boolean,
     val authorities: List<Authority>
-)
+) : EntityWithId

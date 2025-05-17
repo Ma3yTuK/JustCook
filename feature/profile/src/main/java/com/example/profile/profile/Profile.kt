@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
@@ -39,6 +40,7 @@ import com.example.components.JustSurface
 import com.example.components.LocalSharedTransitionScope
 import com.example.components.OnTopButton
 import com.example.components.theme.JustCookColorPalette
+import com.example.data.models.Authorities
 import com.example.profile.R
 import com.example.profile.profile.components.ProfileActionItem
 import com.example.profile.profile.components.UserName
@@ -54,6 +56,8 @@ fun Profile(
     onCreateRecipeClick: () -> Unit,
     onImageChange: (Uri) -> Unit,
     onNameChange: (String) -> Unit,
+    onModerationClick: () -> Unit,
+    canModerate: Boolean,
     isValid: Boolean,
 ) {
     val sharedTransitionScope = LocalSharedTransitionScope.current
@@ -118,6 +122,13 @@ fun Profile(
                         label = stringResource(R.string.create_recipe),
                         onClick = onCreateRecipeClick
                     )
+                    if (canModerate) {
+                        ProfileActionItem(
+                            icon = rememberVectorPainter(Icons.Default.Person),
+                            label = stringResource(R.string.moderation_button),
+                            onClick = onModerationClick
+                        )
+                    }
                     ProfileActionItem(
                         icon = painterResource(R.drawable.logout),
                         label = stringResource(R.string.logout),

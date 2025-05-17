@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Immutable
 @Serializable data class MeasurementUnit(
-    val id: Long,
+    override val id: Long,
     val name: String
-)
+) : EntityWithId

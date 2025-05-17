@@ -5,12 +5,19 @@ import com.example.data.models.Authority
 import com.example.data.models.Ingredient
 import com.example.data.models.MeasurementUnit
 import com.example.data.models.Recipe
-import com.example.data.models.collections.RecipeCollection
 import com.example.data.models.RecipeIngredient
 import com.example.data.models.RecipeStep
 import com.example.data.models.Review
 import com.example.data.models.User
-import com.example.data.models.collections.UserCollection
+import com.example.data.models.RecipeFilters
+import com.example.data.models.RecipeSortingOption
+import com.example.data.models.UserFilters
+import com.example.data.models.UserSortingOption
+import com.example.data.models.categories.CategoryCollection
+import com.example.data.models.categories.LifeStyleCategory
+import com.example.data.models.categories.RealCategory
+import com.example.data.models.search_suggestions.SearchSuggestion
+import com.example.data.models.search_suggestions.SearchSuggestionGroup
 import kotlinx.datetime.LocalDateTime
 
 object RecipeService {
@@ -54,6 +61,17 @@ object RecipeService {
         isVerified = true,
         hasPremium = true
     )
+
+    val searchSuggestion1 = SearchSuggestion("Сыр")
+    val searchSuggestion2 = SearchSuggestion("Яблочный сок")
+
+    val searchSuggestionGroup1 = SearchSuggestionGroup("Недавние запросы", listOf(searchSuggestion1, searchSuggestion2))
+
+    val realCategory1 = RealCategory(0, "Завтраки")
+    val lifeStyleCategory1 = LifeStyleCategory(0, "Без глютена")
+
+    val categoryCollection1 = CategoryCollection("Категории", listOf(realCategory1))
+    val categoryCollection2 = CategoryCollection("По составу", listOf(lifeStyleCategory1))
 
     // Шаги приготовления
     val stepsPancakes = listOf(
@@ -138,31 +156,33 @@ object RecipeService {
         isPremium = false
     )
 
-    // Коллекции рецептов
-    val breakfastCollection = RecipeCollection(
-        id = 1,
-        name = "Завтраки",
-        entities = listOf(pancakes, omelet)
-    )
+    val userSortingOption1 = UserSortingOption(1, "Алфавит")
+    val recipeSortingOption1 = RecipeSortingOption(1, "Название")
 
-    val verifiedUsers = UserCollection(
-        id = 2,
-        name = "Повары JustCook",
-        entities = listOf(userAlice, userCarol)
-    )
+    fun recipesFiltered(filters: RecipeFilters? = null, searchQuery: String? = null): List<Recipe> {
+        if (filters?.sortingOptionId?.toInt() == 1)
+            return listOf(pancakes, omelet)
+        if (filters?.sortingOptionId?.toInt() == 2)
+            return listOf(pancakes)
+        if (filters?.sortingOptionId?.toInt() == 3)
+            return allRecipes.filter { it.user == currentUser }
+        return listOf()
+    }
 
-    val normalCollection = RecipeCollection(
-        id = 3,
-        name = "Простые рецепты",
-        entities = listOf(pancakes)
-    )
+    fun usersFiltered(filters: UserFilters? = null, searchQuery: String? = null): List<User> {
+        if (filters?.sortingOptionId?.toInt() == 1)
+            return listOf(userAlice, userCarol)
+        return listOf()
+    }
 
     // Список всех созданных объектов
+    val userSortingOptions = listOf(userSortingOption1)
+    val recipeSortingOptions = listOf(recipeSortingOption1)
     val allUnits = listOf(gram, ml, piece)
     val allIngredients = listOf(flour, sugar, salt, milk, egg, butter)
     val allUsers = listOf(userAlice, userBob, userCarol)
     val allRecipes = listOf(pancakes, omelet)
-    val allCollections = listOf(breakfastCollection, verifiedUsers, normalCollection)
-    val allRecipeCollections = listOf(breakfastCollection, normalCollection)
-    val allUserCollections = listOf(verifiedUsers)
+    val currentUser = userAlice
+    val allCategoryCollections = listOf(categoryCollection1, categoryCollection2)
+    val allSuggestionGroups = listOf(searchSuggestionGroup1)
 }

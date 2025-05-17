@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="search_just">Some</string>
-    <string name="search_no_matches">No matches for “%1s”</string>
-    <string name="search_no_matches_retry">Try broadening your search</string>
-    <string name="label_add">add</string>
-    <string name="label_back">back</string>
-    <string name="label_search">search\n</string>
+    <string name="search_just">Найти</string>
+    <string name="search_no_matches">По запросу ничего не найдено”</string>
+    <string name="search_no_matches_retry">Попробуйте расширить область поиска</string>
+    <string name="label_add">Добавить</string>
+    <string name="label_back">Назад</string>
+    <string name="label_search">Поиск\n</string>
+    <string name="label_filters">Фильтры</string>
+    <string name="close">Закрыть</string>
+    <string name="user_display">Пользователи</string>
+    <string name="recipe_display">Рецепты</string>
+    <string name="sort">Сортировать</string>
+    <string name="search_type">Что искать</string>
+    <string name="add_chip">Добавить фильтр</string>
+    <string name="add_filter">Добавьте фильтр</string>
+    <string name="sorting">Сортировать по</string>
+    <string name="by_user">Пользователи</string>
+    <string name="by_ingredients">Ингредиенты</string>
+    <string name="add_chip_label">Добавьте фильтр</string>
 </resources>

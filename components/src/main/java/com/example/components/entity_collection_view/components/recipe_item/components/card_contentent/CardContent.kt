@@ -13,11 +13,11 @@ import com.example.data.models.Recipe
 @Composable
 fun CardContent(
     recipe: Recipe,
-    collectionId: Long
+    collectionIndex: Int
 ) {
-    CardRating(recipe, collectionId)
+    CardRating(recipe, collectionIndex)
     Spacer(modifier = Modifier.height(4.dp))
-    CardTitle(recipe, collectionId)
+    CardTitle(recipe, collectionIndex)
     Spacer(modifier = Modifier.height(4.dp))
-    CardCalories(recipe, collectionId)
+    CardCalories(recipe, collectionIndex)
 }

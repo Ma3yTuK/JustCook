@@ -1,8 +1,7 @@
-package com.example.search
+package com.example.search.search_page.components.search_bar
 
-import android.content.res.Configuration
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,11 +9,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Search
@@ -24,8 +25,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,118 +32,29 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.components.JustSurface
-import com.example.components.JustDivider
 import com.example.components.theme.JustCookColorPalette
-import com.example.data.models.Recipe
-import com.example.data.models.SearchCategoryCollection
-import com.example.data.models.SearchRepo
-import com.example.data.models.SearchSuggestionGroup
+import com.example.data.models.Ingredient
+import com.example.data.models.SortEntity
+import com.example.data.models.User
+import com.example.data.models.categories.CategoryCollection
+import com.example.search.R
+import com.example.search.search_page.components.search_bar.components.filter.Filter
+import com.example.search.search_state.SearchState
+import com.example.search.search_state.SearchType
 
 @Composable
-fun Search(
-    onRecipeClick: (Long) -> Unit,
-    modifier: Modifier = Modifier,
-    state: SearchState = rememberSearchState()
-) {
-    JustSurface(modifier = modifier.fillMaxSize()) {
-        Column {
-            Spacer(modifier = Modifier.statusBarsPadding())
-            SearchBar(
-                query = state.query,
-                onQueryChange = { state.query = it },
-                searchFocused = state.focused,
-                onSearchFocusChange = { state.focused = it },
-                onClearQuery = { state.query = TextFieldValue("") },
-                searching = state.searching
-            )
-            JustDivider()
-
-            LaunchedEffect(state.query.text) {
-                state.searching = true
-                state.searchResults = SearchRepo.search(state.query.text)
-                state.searching = false
-            }
-            when (state.searchDisplay) {
-                SearchDisplay.Categories -> SearchCategories(state.categories)
-                SearchDisplay.Suggestions -> SearchSuggestions(
-                    suggestions = state.suggestions,
-                    onSuggestionSelect = { suggestion ->
-                        state.query = TextFieldValue(suggestion)
-                    }
-                )
-
-                SearchDisplay.Results -> SearchResults(
-                    state.searchResults,
-                    onRecipeClick
-                )
-
-                SearchDisplay.NoResults -> NoResults(state.query.text)
-            }
-        }
-    }
-}
-
-enum class SearchDisplay {
-    Categories, Suggestions, Results, NoResults
-}
-
-@Composable
-private fun rememberSearchState(
-    query: TextFieldValue = TextFieldValue(""),
-    focused: Boolean = false,
-    searching: Boolean = false,
-    categories: List<SearchCategoryCollection> = SearchRepo.getCategories(),
-    suggestions: List<SearchSuggestionGroup> = SearchRepo.getSuggestions(),
-    searchResults: List<Recipe> = emptyList()
-): SearchState {
-    return remember {
-        SearchState(
-            query = query,
-            focused = focused,
-            searching = searching,
-            categories = categories,
-            suggestions = suggestions,
-            searchResults = searchResults
-        )
-    }
-}
-
-@Stable
-class SearchState(
-    query: TextFieldValue,
-    focused: Boolean,
-    searching: Boolean,
-    categories: List<SearchCategoryCollection>,
-    suggestions: List<SearchSuggestionGroup>,
-    searchResults: List<Recipe>
-) {
-    var query by mutableStateOf(query)
-    var focused by mutableStateOf(focused)
-    var searching by mutableStateOf(searching)
-    var categories by mutableStateOf(categories)
-    var suggestions by mutableStateOf(suggestions)
-    var searchResults by mutableStateOf(searchResults)
-    val searchDisplay: SearchDisplay
-        get() = when {
-            !focused && query.text.isEmpty() -> SearchDisplay.Categories
-            focused && query.text.isEmpty() -> SearchDisplay.Suggestions
-            searchResults.isEmpty() -> SearchDisplay.NoResults
-            else -> SearchDisplay.Results
-        }
-}
-
-@Composable
-private fun SearchBar(
-    query: TextFieldValue,
-    onQueryChange: (TextFieldValue) -> Unit,
+fun SearchBar(
+    searchQuery: String,
+    onQueryChange: (String) -> Unit,
+    onEnter: () -> Unit,
     searchFocused: Boolean,
     onSearchFocusChange: (Boolean) -> Unit,
-    onClearQuery: () -> Unit,
+    onShowFilters: () -> Unit,
     searching: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -158,7 +68,7 @@ private fun SearchBar(
             .padding(horizontal = 24.dp, vertical = 8.dp)
     ) {
         Box(Modifier.fillMaxSize()) {
-            if (query.text.isEmpty()) {
+            if (searchQuery.isEmpty()) {
                 SearchHint()
             }
             Row(
@@ -168,7 +78,7 @@ private fun SearchBar(
                     .wrapContentHeight()
             ) {
                 if (searchFocused) {
-                    IconButton(onClick = onClearQuery) {
+                    IconButton(onClick = { onQueryChange("") }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             tint = JustCookColorPalette.colors.iconPrimary,
@@ -177,8 +87,13 @@ private fun SearchBar(
                     }
                 }
                 BasicTextField(
-                    value = query,
+                    value = searchQuery,
                     onValueChange = onQueryChange,
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(
+                        onDone = { onEnter() }
+                    ),
                     modifier = Modifier
                         .weight(1f)
                         .onFocusChanged {
@@ -194,6 +109,15 @@ private fun SearchBar(
                     )
                 } else {
                     Spacer(Modifier.width(IconSize)) // balance arrow icon
+                }
+                if (searchFocused) {
+                    IconButton(onClick = onShowFilters) {
+                        Icon(
+                            painter = painterResource(R.drawable.filter_variant),
+                            tint = JustCookColorPalette.colors.iconPrimary,
+                            contentDescription = stringResource(R.string.label_filters)
+                        )
+                    }
                 }
             }
         }

@@ -34,7 +34,10 @@ import com.example.data.models.Recipe
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun Header(recipe: Recipe, collectionId: Long) {
+fun Header(
+    recipe: Recipe,
+    collectionIndex: Int?
+) {
     val sharedTransitionScope = LocalSharedTransitionScope.current
         ?: throw IllegalArgumentException("No Scope found")
     val animatedVisibilityScope = LocalNavAnimatedVisibilityScope.current
@@ -63,7 +66,7 @@ fun Header(recipe: Recipe, collectionId: Long) {
                         key = RecipeSharedElementKey(
                             recipeId = recipe.id,
                             type = RecipeSharedElementType.Background,
-                            collectionId = collectionId
+                            collectionIndex = collectionIndex
                         )
                     ),
                     animatedVisibilityScope = animatedVisibilityScope,

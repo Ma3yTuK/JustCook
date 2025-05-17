@@ -57,6 +57,7 @@ import com.example.data.models.Recipe
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.constraintlayout.compose.Dimension
 import com.example.data.models.User
 
@@ -66,103 +67,15 @@ fun UserList(
     onUserClick: (User) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(modifier) {
-        if (users.isEmpty()) {
-            item(key = "nothing") {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(32.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.no_recipes),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = JustCookColorPalette.colors.textHelp
-                    )
-                }
-            }
-        } else {
-            items(users, key = { it.id }) { user ->
-                UserItem(
-                    user = user,
-                    onUserClick = onUserClick
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun UserItem(
-    user: User,
-    onUserClick: (User) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    ConstraintLayout(
+    CustomizableItemList(
+        entities = users,
+        customItem = { user ->
+            UserItem(
+                user = user,
+                onUserClick = onUserClick
+            )
+        },
+        key = { it.id },
         modifier = modifier
-            .fillMaxWidth()
-            .clickable { onUserClick(user) }
-            .background(JustCookColorPalette.colors.uiBackground)
-            .padding(horizontal = 24.dp)
-
-    ) {
-        val (divider, image, name, statusSpacer, status) = createRefs()
-        createVerticalChain(name, status, chainStyle = ChainStyle.Packed)
-        JustImage(
-            contentDescription = null,
-            isVerified = user.isVerified,
-            modifier = Modifier
-                .size(100.dp)
-                .constrainAs(image) {
-                    top.linkTo(parent.top, margin = 16.dp)
-                    bottom.linkTo(parent.bottom, margin = 16.dp)
-                    start.linkTo(parent.start)
-                }
-        )
-        Text(
-            text = user.name,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.titleMedium,
-            color = JustCookColorPalette.colors.textSecondary,
-            modifier = Modifier.constrainAs(name) {
-                width = Dimension.preferredWrapContent
-                linkTo(
-                    start = image.end,
-                    startMargin = 16.dp,
-                    end = parent.end,
-                    endMargin = 16.dp,
-                    bias = 0f
-                )
-            }
-        )
-        Spacer(
-            Modifier
-                .height(8.dp)
-                .constrainAs(statusSpacer) {
-                    linkTo(top = name.bottom, bottom = status.top)
-                }
-        )
-        Text(
-            text = if (user.isVerified) stringResource(R.string.status_verified) else stringResource(R.string.status_not_verified),
-            style = MaterialTheme.typography.bodyLarge,
-            color = JustCookColorPalette.colors.textHelp,
-            modifier = Modifier.constrainAs(status) {
-                linkTo(
-                    start = image.end,
-                    startMargin = 16.dp,
-                    end = parent.end,
-                    endMargin = 16.dp,
-                    bias = 0f
-                )
-            }
-        )
-        JustDivider(
-            Modifier.constrainAs(divider) {
-                linkTo(start = parent.start, end = parent.end)
-                top.linkTo(parent.bottom)
-            }
-        )
-    }
+    )
 }

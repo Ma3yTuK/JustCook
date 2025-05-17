@@ -27,20 +27,19 @@ import com.example.components.entity_collection_view.components.UserItem
 import com.example.components.entity_collection_view.components.recipe_item.RecipeItem
 import com.example.components.entity_collection_view.components.recipe_item.components.card_top.cardWidthWithPaddingPx
 import com.example.data.models.Recipe
-import com.example.data.models.collections.RecipeCollection
 import com.example.components.theme.JustCookColorPalette
+import com.example.data.models.EntityWithId
 import com.example.data.models.User
-import com.example.data.models.collections.EntityCollection
-import com.example.data.models.collections.UserCollection
 
 @Composable
 fun EntityCollectionView(
-    entityCollection: EntityCollection,
-    onCollectionClick: (EntityCollection) -> Unit,
+    entityCollection: List<EntityWithId>,
+    collectionIndex: Int,
+    onCollectionClick: () -> Unit,
+    collectionName: String,
     modifier: Modifier = Modifier,
-    onRecipeClick: (Recipe, Long) -> Unit = { _, _ -> },
-    onUserClick: (User, Long) -> Unit = { _, _ -> },
-    collectionName: String = entityCollection.name
+    onRecipeClick: (Recipe, Int) -> Unit = { _, _ -> },
+    onUserClick: (User, Int) -> Unit = { _, _ -> }
 ) {
     Column(modifier = modifier) {
         Row(
@@ -60,7 +59,7 @@ fun EntityCollectionView(
                     .wrapContentWidth(Alignment.Start)
             )
             IconButton(
-                onClick = { onCollectionClick(entityCollection) },
+                onClick = onCollectionClick,
                 modifier = Modifier.align(Alignment.CenterVertically)
             ) {
                 Icon(
@@ -70,15 +69,16 @@ fun EntityCollectionView(
                 )
             }
         }
-        Entities(entityCollection, onRecipeClick, onUserClick)
+        Entities(entityCollection, collectionIndex, onRecipeClick, onUserClick)
     }
 }
 
 @Composable
 fun Entities(
-    entityCollection: EntityCollection,
-    onRecipeClick: (Recipe, Long) -> Unit,
-    onUserClick: (User, Long) -> Unit,
+    entityCollection: List<EntityWithId>,
+    collectionIndex: Int,
+    onRecipeClick: (Recipe, Int) -> Unit,
+    onUserClick: (User, Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val rowState = rememberLazyListState()
@@ -90,32 +90,28 @@ fun Entities(
         offsetFromStart + rowState.firstVisibleItemScrollOffset
     }
 
-    if (entityCollection is RecipeCollection) {
-        LazyRow(
-            modifier = modifier,
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(start = 24.dp, end = 24.dp)
-        ) {
-            itemsIndexed(entityCollection.entities) { index, recipe ->
+    LazyRow(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(start = 24.dp, end = 24.dp)
+    ) {
+        itemsIndexed(entityCollection) { index, entity ->
+            if (entity is Recipe) {
                 RecipeItem(
                     index,
-                    entityCollection.id,
-                    recipe,
+                    collectionIndex,
+                    entity,
                     onRecipeClick,
-                    if (recipe.isPremium) JustCookColorPalette.colors.gradientGold else JustCookColorPalette.colors.gradient6_1,
+                    if (entity.isPremium) JustCookColorPalette.colors.gradientGold else JustCookColorPalette.colors.gradient6_1,
                     scrollProvider
                 )
             }
-        }
-    }
-    if (entityCollection is UserCollection) {
-        LazyRow(
-            modifier = modifier,
-            horizontalArrangement = Arrangement.spacedBy(0.dp),
-            contentPadding = PaddingValues(start = 12.dp, end = 12.dp)
-        ) {
-            items(entityCollection.entities) { entity ->
-                UserItem(entityCollection.id, entity, onUserClick)
+            if (entity is User) {
+                UserItem(
+                    collectionIndex,
+                    entity,
+                    onUserClick
+                )
             }
         }
     }

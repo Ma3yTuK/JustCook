@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Immutable
 @Serializable data class RecipeIngredient(
-    val id: Long,
+    override val id: Long,
     val amount: Float,
     val ingredient: Ingredient,
     val ingredientConversion: IngredientIngredientConversion? = null
-)
+) : EntityWithId

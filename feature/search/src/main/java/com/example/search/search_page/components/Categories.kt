@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.example.search
+package com.example.search.search_page.components
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -39,23 +38,23 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.example.components.theme.JustCookColorPalette
 import kotlin.math.max
 import com.example.components.JustImage
 import com.example.components.VerticalGrid
-import com.example.data.models.SearchCategory
-import com.example.data.models.SearchCategoryCollection
+import com.example.data.models.categories.Category
+import com.example.data.models.categories.CategoryCollection
 
 @Composable
 fun SearchCategories(
-    categories: List<SearchCategoryCollection>
+    categoryCollections: List<CategoryCollection>,
+    onCategoryClick: (Category) -> Unit
 ) {
     LazyColumn {
-        itemsIndexed(categories) { index, collection ->
-            SearchCategoryCollection(collection, index)
+        itemsIndexed(categoryCollections) { index, collection ->
+            SearchCategoryCollection(collection, index, onCategoryClick)
         }
     }
     Spacer(Modifier.height(8.dp))
@@ -63,8 +62,9 @@ fun SearchCategories(
 
 @Composable
 private fun SearchCategoryCollection(
-    collection: SearchCategoryCollection,
+    collection: CategoryCollection,
     index: Int,
+    onCategoryClick: (Category) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier) {
@@ -86,6 +86,7 @@ private fun SearchCategoryCollection(
                 SearchCategory(
                     category = category,
                     gradient = gradient,
+                    onCategoryClick =onCategoryClick,
                     modifier = Modifier.padding(8.dp)
                 )
             }
@@ -100,8 +101,9 @@ private const val CategoryTextProportion = 0.55f
 
 @Composable
 private fun SearchCategory(
-    category: SearchCategory,
+    category: Category,
     gradient: List<Color>,
+    onCategoryClick: (Category) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Layout(
@@ -110,7 +112,7 @@ private fun SearchCategory(
             .shadow(elevation = 3.dp, shape = CategoryShape)
             .clip(CategoryShape)
             .background(Brush.horizontalGradient(gradient))
-            .clickable { /* todo */ },
+            .clickable { onCategoryClick(category) },
         content = {
             Text(
                 text = category.name,

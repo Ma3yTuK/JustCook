@@ -11,13 +11,13 @@ import com.example.components.JustSurface
 import com.example.components.entity_collection_view.EntityCollectionView
 import com.example.data.models.Recipe
 import com.example.data.models.User
-import com.example.data.models.collections.EntityCollection
+import com.example.catalogue.collections.EntityCollection
 
 @Composable
 fun Feed(
     collections: List<EntityCollection>,
-    onRecipeClick: (Recipe, Long) -> Unit,
-    onUserClick: (User, Long) -> Unit,
+    onRecipeClick: (Recipe, Int) -> Unit,
+    onUserClick: (User, Int) -> Unit,
     onCollectionClick: (EntityCollection) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -29,8 +29,10 @@ fun Feed(
                 }
 
                 EntityCollectionView(
-                    entityCollection = collection,
-                    onCollectionClick = onCollectionClick,
+                    collectionName = collection.route.title,
+                    collectionIndex = index,
+                    entityCollection = collection.entities,
+                    onCollectionClick = { onCollectionClick(collection) },
                     onRecipeClick = onRecipeClick,
                     onUserClick = onUserClick
                 )

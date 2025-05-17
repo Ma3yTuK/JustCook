@@ -24,7 +24,7 @@ import com.example.components.entity_collection_view.components.recipe_item.reci
 @Composable
 fun Image(
     recipeId: Long,
-    collectionId: Long,
+    collectionIndex: Int?,
     isInEditMode: Boolean,
     onChangeRecipeImage: (Uri) -> Unit,
     scrollProvider: () -> Int
@@ -54,7 +54,7 @@ fun Image(
                             key = RecipeSharedElementKey(
                                 recipeId = recipeId,
                                 type = RecipeSharedElementType.Image,
-                                collectionId = collectionId
+                                collectionIndex = collectionIndex
                             )
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,

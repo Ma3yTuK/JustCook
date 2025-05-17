@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.example.search
+package com.example.search.search_page.components
 
-import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -32,6 +31,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -39,23 +40,31 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.example.components.CustomizableItemList
 import com.example.components.JustButton
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.Recipe
 import com.example.components.JustDivider
 import com.example.components.JustImage
+import com.example.components.RecipeItem
+import com.example.components.UserItem
+import com.example.data.models.EntityWithId
+import com.example.data.models.User
+import com.example.search.R
 
 @Composable
 fun SearchResults(
-    searchResults: List<Recipe>,
-    onRecipeClick: (Long) -> Unit
+    searchResults: List<EntityWithId>,
+    onRecipeClick: (Long) -> Unit,
+    onToggleFavoriteClick: (Recipe) -> Unit,
+    onUserClick: (Long) -> Unit
 ) {
     Column {
         Text(
@@ -64,108 +73,31 @@ fun SearchResults(
             color = JustCookColorPalette.colors.textPrimary,
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp)
         )
-        LazyColumn {
-            itemsIndexed(searchResults) { index, snack ->
-                SearchResult(snack, onRecipeClick, index != 0)
-            }
-        }
-    }
-}
-
-@Composable
-private fun SearchResult(
-    recipe: Recipe,
-    onRecipeClick: (Long) -> Unit,
-    showDivider: Boolean,
-    modifier: Modifier = Modifier
-) {
-    ConstraintLayout(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onRecipeClick(recipe.id) }
-            .padding(horizontal = 24.dp)
-    ) {
-        val (divider, image, name, tag, priceSpacer, price, add) = createRefs()
-        createVerticalChain(name, tag, priceSpacer, price, chainStyle = ChainStyle.Packed)
-        if (showDivider) {
-            JustDivider(
-                Modifier.constrainAs(divider) {
-                    linkTo(start = parent.start, end = parent.end)
-                    top.linkTo(parent.top)
-                }
-            )
-        }
-        JustImage(
-            contentDescription = null,
-            modifier = Modifier
-                .size(100.dp)
-                .constrainAs(image) {
-                    linkTo(
-                        top = parent.top,
-                        topMargin = 16.dp,
-                        bottom = parent.bottom,
-                        bottomMargin = 16.dp
+        CustomizableItemList(
+            entities = searchResults,
+            key = { it.id },
+            customItem = { entityWithId ->
+                if (entityWithId is Recipe) {
+                    RecipeItem(
+                        recipe = entityWithId,
+                        onRecipeClick = { onRecipeClick(it.id) },
+                        onIconClick = onToggleFavoriteClick,
+                        iconPainter = if (entityWithId.isFavorite) rememberVectorPainter(Icons.Default.Favorite) else rememberVectorPainter(Icons.Default.FavoriteBorder)
                     )
-                    start.linkTo(parent.start)
                 }
-        )
-        Text(
-            text = recipe.name,
-            style = MaterialTheme.typography.titleMedium,
-            color = JustCookColorPalette.colors.textSecondary,
-            modifier = Modifier.constrainAs(name) {
-                linkTo(
-                    start = image.end,
-                    startMargin = 16.dp,
-                    end = add.start,
-                    endMargin = 16.dp,
-                    bias = 0f
-                )
+                if (entityWithId is User) {
+                    UserItem(
+                        user = entityWithId,
+                        onUserClick = { onUserClick(it.id) }
+                    )
+                }
             }
         )
-        Text(
-            text = recipe.calories.toString(),
-            style = MaterialTheme.typography.bodyLarge,
-            color = JustCookColorPalette.colors.textHelp,
-            modifier = Modifier.constrainAs(tag) {
-                linkTo(
-                    start = image.end,
-                    startMargin = 16.dp,
-                    end = add.start,
-                    endMargin = 16.dp,
-                    bias = 0f
-                )
-            }
-        )
-        Spacer(
-            Modifier
-                .height(8.dp)
-                .constrainAs(priceSpacer) {
-                    linkTo(top = tag.bottom, bottom = price.top)
-                }
-        )
-        JustButton(
-            onClick = { /* todo */ },
-            shape = CircleShape,
-            contentPadding = PaddingValues(0.dp),
-            modifier = Modifier
-                .size(36.dp)
-                .constrainAs(add) {
-                    linkTo(top = parent.top, bottom = parent.bottom)
-                    end.linkTo(parent.end)
-                }
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.Add,
-                contentDescription = stringResource(R.string.label_add)
-            )
-        }
     }
 }
 
 @Composable
 fun NoResults(
-    query: String,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -181,7 +113,7 @@ fun NoResults(
         )
         Spacer(Modifier.height(24.dp))
         Text(
-            text = stringResource(R.string.search_no_matches, query),
+            text = stringResource(R.string.search_no_matches),
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()

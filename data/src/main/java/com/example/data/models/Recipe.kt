@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Immutable
 @Serializable data class Recipe(
-    val id: Long,
+    override val id: Long,
     val name: String,
     val calories: Long,
     val rating: Float,
@@ -16,4 +16,4 @@ import kotlinx.serialization.Serializable
     val steps: List<RecipeStep>,
     val ingredients: List<RecipeIngredient>,
     val reviews: List<Review>
-)
+) : EntityWithId
