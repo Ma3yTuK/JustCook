@@ -4,7 +4,8 @@ import androidx.compose.runtime.Immutable
 import kotlinx.serialization.Serializable
 
 enum class Authorities(val id: Long) {
-    Moderate(3)
+    Moderate(3),
+    Premium(4)
 }
 
 @Immutable

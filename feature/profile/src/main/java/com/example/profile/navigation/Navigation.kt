@@ -1,18 +1,16 @@
 package com.example.profile.navigation
 
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.navigation
 import com.example.components.composableWithCompositionLocal
-import com.example.data.models.Authorities
-import com.example.data.services.RecipeService
-import com.example.profile.profile.Profile
 import kotlinx.serialization.Serializable
-import com.example.profile.R
-import com.example.profile.profile.Moderation
+import com.example.profile.profile.moderation.Moderation
+import com.example.profile.profile.moderation.ModerationPage
+import com.example.profile.profile.profile.ProfilePage
+import kotlinx.coroutines.flow.flowOf
 
 @Serializable object ProfileRoute
 @Serializable object ModerationPageRoute
@@ -25,27 +23,18 @@ fun NavGraphBuilder.profileNavigation(
     navController: NavHostController,
     onCreateRecipeClick: () -> Unit,
     onModerationRecipeClick: (Long) -> Unit,
-    onMyRecipesClick: (userId: Long) -> Unit
+    onUserRecipesClick: (userId: Long) -> Unit
 ) {
     navigation<ProfileRoute>(startDestination = ProfilePageRoute) {
         composableWithCompositionLocal<ProfilePageRoute> {
-            Profile(
-                user = RecipeService.currentUser,
-                onSaveEdit = {},
-                onCancelEdit = {},
-                onLogoutClick = {},
+            ProfilePage(
                 onCreateRecipeClick = onCreateRecipeClick,
-                onMyRecipesClick = { onMyRecipesClick(RecipeService.currentUser.id) },
-                onImageChange = { _ -> },
-                onNameChange = { _ -> },
-                onModerationClick = { navController.navigateToModeration() },
-                canModerate = RecipeService.currentUser.authorities.any { it.id == Authorities.Moderate.id },
-                isValid = true
+                onUserRecipesClick = onUserRecipesClick,
+                onModerationClick = { navController.navigateToModeration() }
             )
         }
         composableWithCompositionLocal<ModerationPageRoute> {
-            Moderation(
-                recipes = listOf(),
+            ModerationPage(
                 onRecipeClick = { onModerationRecipeClick(it.id) }
             )
         }

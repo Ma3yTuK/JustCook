@@ -18,4 +18,5 @@
     <string name="by_user">Пользователи</string>
     <string name="by_ingredients">Ингредиенты</string>
     <string name="add_chip_label">Добавьте фильтр</string>
+    <string name="search_results">Результаты поиска</string>
 </resources>

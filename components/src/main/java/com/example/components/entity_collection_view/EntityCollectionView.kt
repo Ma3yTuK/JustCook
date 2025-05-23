@@ -30,6 +30,8 @@ import com.example.data.models.Recipe
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.EntityWithId
 import com.example.data.models.User
+import com.example.data.models.short_models.RecipeShort
+import com.example.data.models.short_models.UserShort
 
 @Composable
 fun EntityCollectionView(
@@ -38,8 +40,8 @@ fun EntityCollectionView(
     onCollectionClick: () -> Unit,
     collectionName: String,
     modifier: Modifier = Modifier,
-    onRecipeClick: (Recipe, Int) -> Unit = { _, _ -> },
-    onUserClick: (User, Int) -> Unit = { _, _ -> }
+    onRecipeClick: (RecipeShort, Int) -> Unit = { _, _ -> },
+    onUserClick: (UserShort, Int) -> Unit = { _, _ -> }
 ) {
     Column(modifier = modifier) {
         Row(
@@ -77,8 +79,8 @@ fun EntityCollectionView(
 fun Entities(
     entityCollection: List<EntityWithId>,
     collectionIndex: Int,
-    onRecipeClick: (Recipe, Int) -> Unit,
-    onUserClick: (User, Int) -> Unit,
+    onRecipeClick: (RecipeShort, Int) -> Unit,
+    onUserClick: (UserShort, Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val rowState = rememberLazyListState()
@@ -96,7 +98,7 @@ fun Entities(
         contentPadding = PaddingValues(start = 24.dp, end = 24.dp)
     ) {
         itemsIndexed(entityCollection) { index, entity ->
-            if (entity is Recipe) {
+            if (entity is RecipeShort) {
                 RecipeItem(
                     index,
                     collectionIndex,
@@ -106,7 +108,7 @@ fun Entities(
                     scrollProvider
                 )
             }
-            if (entity is User) {
+            if (entity is UserShort) {
                 UserItem(
                     collectionIndex,
                     entity,

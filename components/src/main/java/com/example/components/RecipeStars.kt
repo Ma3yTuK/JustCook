@@ -10,20 +10,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.Recipe
+import com.example.data.models.short_models.RecipeShort
 
 @Composable
 fun RecipeStars(
-    recipe: Recipe,
+    recipeRating: Float,
+    recipeIsPremium: Boolean,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
     ) {
-        for (star in 1..recipe.rating.toInt()) {
+        for (star in 1..recipeRating.toInt()) {
             Icon(
                 imageVector = Icons.Default.Star,
                 contentDescription = null,
-                tint = if(recipe.isPremium) JustCookColorPalette.colors.iconGold else JustCookColorPalette.colors.iconPrimary,
+                tint = if(recipeIsPremium) JustCookColorPalette.colors.iconGold else JustCookColorPalette.colors.iconPrimary,
                 modifier = Modifier.size(20.dp)
             )
         }

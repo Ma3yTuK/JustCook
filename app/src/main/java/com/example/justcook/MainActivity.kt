@@ -1,44 +1,25 @@
 package com.example.justcook
 
+import android.icu.text.DateFormat
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
-import androidx.navigation.NavDestination
-import androidx.navigation.NavGraph
-import androidx.navigation.NavOptions
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.components.theme.JustCookTheme
 import com.example.justcook.navigation.AppNavigation
@@ -46,13 +27,62 @@ import com.example.components.LocalNavAnimatedVisibilityScope
 import com.example.components.LocalSharedTransitionScope
 import com.example.components.springs.spatialExpressiveSpring
 import com.example.components.springs.nonSpatialExpressiveSpring
+import com.example.data.repositories.ImageRepository
+import com.example.data.repositories.LocalImageRepository
+import com.example.data.services.auth.AuthService
+import com.example.data.services.auth.sign_in.BlankSignInService
+import com.example.data.services.auth.sign_in.LocalSignInService
+import com.example.data.services.auth.LocalTokenService
+import com.example.data.services.auth.TokenService
+import com.example.data.services.ingredient.IngredientService
+import com.example.data.services.ingredient.LocalIngredientService
+import com.example.data.services.recipe.LocalRecipeService
+import com.example.data.services.recipe.RecipeService
+import com.example.data.services.review.LocalReviewService
+import com.example.data.services.review.ReviewService
+import com.example.data.services.user.LocalUserService
+import com.example.data.services.user.UserService
 import com.example.justcook.navigation.JustBottomBar
 import com.example.justcook.navigation.HomeSection
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalSharedTransitionApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val tokenService = TokenService(this)
+
+        val httpClient = OkHttpClient().newBuilder()
+            .addInterceptor(
+                Interceptor { chain ->
+                    val request: Request = chain.request()
+                        .newBuilder()
+                        .header("Authorization", tokenService.getToken().let { if (it.isNotBlank()) "Bearer ${it}" else "" })
+                        .build()
+                    chain.proceed(request)
+                }
+            )
+
+        val retrofit = Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(this.resources.getString(R.string.backend_url))
+            .client(httpClient.build())
+            .build()
+
+        val authService: AuthService = retrofit.create(AuthService::class.java)
+        val signInService = BlankSignInService(authService, tokenService)
+        val imageRepository = ImageRepository(retrofit)
+        val userService = retrofit.create(UserService::class.java)
+        val recipeService = retrofit.create(RecipeService::class.java)
+        val reviewService = retrofit.create(ReviewService::class.java)
+        val ingredientService = retrofit.create(IngredientService::class.java)
+
         enableEdgeToEdge()
         setContent {
             JustCookTheme {
@@ -62,6 +92,13 @@ class MainActivity : ComponentActivity() {
                 SharedTransitionLayout {
                     AnimatedVisibility(visible = true) {
                         CompositionLocalProvider(
+                            LocalIngredientService provides ingredientService,
+                            LocalReviewService provides reviewService,
+                            LocalRecipeService provides recipeService,
+                            LocalUserService provides userService,
+                            LocalImageRepository provides imageRepository,
+                            LocalTokenService provides tokenService,
+                            LocalSignInService provides signInService,
                             LocalSharedTransitionScope provides this@SharedTransitionLayout,
                             LocalNavAnimatedVisibilityScope provides this@AnimatedVisibility
                         ) {

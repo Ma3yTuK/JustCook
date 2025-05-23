@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -28,10 +29,10 @@ import com.example.catalogue.recipe_detail.components.body.components.reviews.co
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddReviewBottomSheet(
-    onSubmitReview: (rating: Float, comment: String) -> Unit,
+    onSubmitReview: (rating: Long, comment: String) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var rating by remember { mutableFloatStateOf(0f) }
+    var rating by remember { mutableIntStateOf(0) }
     var comment by remember { mutableStateOf("") }
 
     ModalBottomSheet(
@@ -51,7 +52,7 @@ fun AddReviewBottomSheet(
 
             Spacer(Modifier.height(16.dp))
 
-            RatingStars(rating = rating, onRatingSelected = { rating = it })
+            RatingStars(rating = rating.toFloat(), onRatingSelected = { rating = it.toInt() })
 
             Spacer(Modifier.height(16.dp))
 
@@ -67,7 +68,7 @@ fun AddReviewBottomSheet(
 
             Button(
                 onClick = {
-                    onSubmitReview(rating, comment)
+                    onSubmitReview(rating.toLong(), comment)
                     onDismiss()
                 },
                 enabled = rating > 0 && comment.isNotBlank(),

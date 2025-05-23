@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -24,17 +27,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.catalogue.R
 import com.example.catalogue.recipe_detail.components.body.components.reviews.components.ReviewItem
 import com.example.catalogue.recipe_detail.components.body.components.reviews.components.add_review_bottom_sheet.AddReviewBottomSheet
+import com.example.components.CustomizableItemList
 import com.example.components.theme.JustCookColorPalette
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun Reviews(
-    reviews: List<Review>,
-    canDeleteReview: (Review) -> Boolean,
-    onDeleteReview: (Long) -> Unit,
-    onSubmitReview: (rating: Float, comment: String) -> Unit,
+    onSubmitReview: (rating: Long, comment: String) -> Unit,
     isLoggedIn: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -66,19 +70,6 @@ fun Reviews(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        if (reviews.isEmpty()) {
-            Text(
-                text = stringResource(R.string.no_reviews_yet),
-                style = MaterialTheme.typography.bodyMedium,
-                color = JustCookColorPalette.colors.textHelp
-            )
-        } else {
-            reviews.forEach { review ->
-                ReviewItem(review = review, canDeleteReview, onDeleteReview)
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-        }
     }
 
     if (showSheet.value) {

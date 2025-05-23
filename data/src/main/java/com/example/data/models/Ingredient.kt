@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 @Immutable
 @Serializable data class Ingredient(
     override val id: Long,
-    val name: String,
-    val unit: MeasurementUnit
+    val calories: Long,
+    val name: String
 ) : EntityWithId

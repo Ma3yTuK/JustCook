@@ -40,10 +40,9 @@ import com.example.data.models.RecipeStep
 @Composable
 fun Steps(
     recipeSteps: List<RecipeStep>,
-    setStepDescription: (RecipeStep, String) -> Unit,
-    setStepImage: (RecipeStep, Uri) -> Unit,
-    onDeleteStep: (RecipeStep) -> Unit,
-    addStep: (String) -> Unit,
+    updateStep: (Int, String?, Uri?) -> Unit,
+    onDeleteStep: (Int) -> Unit,
+    addStep: (String, Uri?) -> Unit,
     isInEditMode: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -83,9 +82,8 @@ fun Steps(
             StepInfo(
                 recipeStep = recipeStep,
                 index = index,
-                setStepDescription = setStepDescription,
-                setStepImage = setStepImage,
-                onDeleteStep = onDeleteStep,
+                updateStep = { description, image -> updateStep(index, description, image) },
+                onDeleteStep = { onDeleteStep(index) },
                 isInEditMode,
                 modifier = Modifier.padding(vertical = 4.dp)
             )
@@ -122,7 +120,7 @@ fun Steps(
                 // Кнопка «Сохранить»
                 Button(
                     onClick = {
-                        addStep(newDesc)
+                        addStep(newDesc, null)
                         showAddSheet = false
                     },
                     enabled = newDesc.isNotBlank(),

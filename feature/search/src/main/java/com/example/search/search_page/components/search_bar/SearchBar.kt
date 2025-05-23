@@ -39,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import com.example.components.JustSurface
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.Ingredient
-import com.example.data.models.SortEntity
 import com.example.data.models.User
 import com.example.data.models.categories.CategoryCollection
 import com.example.search.R

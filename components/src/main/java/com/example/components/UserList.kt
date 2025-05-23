@@ -59,12 +59,16 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.constraintlayout.compose.Dimension
+import androidx.paging.PagingData
 import com.example.data.models.User
+import com.example.data.models.short_models.RecipeShort
+import com.example.data.models.short_models.UserShort
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun UserList(
-    users: List<User>,
-    onUserClick: (User) -> Unit,
+    users: Flow<PagingData<UserShort>>,
+    onUserClick: (UserShort) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     CustomizableItemList(
@@ -75,7 +79,6 @@ fun UserList(
                 onUserClick = onUserClick
             )
         },
-        key = { it.id },
         modifier = modifier
     )
 }

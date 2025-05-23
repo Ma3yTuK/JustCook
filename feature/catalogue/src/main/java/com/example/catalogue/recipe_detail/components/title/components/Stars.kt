@@ -36,7 +36,8 @@ fun Stars(
 
     with(sharedTransitionScope) {
         RecipeStars(
-            recipe = recipe,
+            recipeRating = recipe.rating,
+            recipeIsPremium = recipe.isPremium,
             modifier = Modifier
                 .padding(horizontal = 20.dp)
                 .sharedBounds(

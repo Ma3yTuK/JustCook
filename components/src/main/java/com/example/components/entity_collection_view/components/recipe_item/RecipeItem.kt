@@ -28,6 +28,7 @@ import com.example.components.entity_collection_view.components.recipe_item.comp
 import com.example.components.JustCard
 import com.example.components.springs.spatialExpressiveSpring
 import com.example.components.theme.JustCookColorPalette
+import com.example.data.models.short_models.RecipeShort
 
 val HighlightCardWidth = 170.dp
 
@@ -43,6 +44,7 @@ enum class RecipeSharedElementType {
     Title,
     Calories,
     Rating,
+    Weight,
     Background
 }
 
@@ -56,8 +58,8 @@ val recipeDetailBoundsTransform = BoundsTransform { _, _ ->
 fun RecipeItem(
     index: Int,
     collectionIndex: Int,
-    recipe: Recipe,
-    onRecipeClick: (Recipe, Int) -> Unit,
+    recipe: RecipeShort,
+    onRecipeClick: (RecipeShort, Int) -> Unit,
     gradient: List<Color>,
     scrollProvider: () -> Float,
     modifier: Modifier = Modifier

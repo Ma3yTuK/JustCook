@@ -2,4 +2,5 @@
 <resources>
     <string name="feature_header">Избранное</string>
     <string name="remove_item">Удалить</string>
+    <string name="favorite_error">Ошибка при удалении</string>
 </resources>

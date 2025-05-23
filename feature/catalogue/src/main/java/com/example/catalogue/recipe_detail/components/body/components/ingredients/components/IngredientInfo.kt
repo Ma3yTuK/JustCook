@@ -21,8 +21,6 @@ import androidx.compose.ui.layout.LastBaseline
 import androidx.compose.ui.unit.dp
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.Ingredient
-import com.example.data.models.IngredientIngredientConversion
-import com.example.data.models.RecipeIngredient
 import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -42,16 +40,19 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableLongStateOf
+import com.example.data.models.IngredientUnitConversion
+import com.example.data.models.RecipeConversion
 
 @SuppressLint("DefaultLocale")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IngredientInfo(
-    ingredient: RecipeIngredient,
-    getConversionsForIngredient: (Ingredient) -> List<IngredientIngredientConversion>,
-    setIngredientConversion: (RecipeIngredient, IngredientIngredientConversion?) -> Unit,
-    setIngredientAmount: (RecipeIngredient, Float) -> Unit,
-    onDeleteIngredient: (RecipeIngredient) -> Unit,
+    ingredient: RecipeConversion,
+    updateConversionsForIngredient: () -> Unit,
+    conversionsForIngredient: List<IngredientUnitConversion>?,
+    updateIngredient: (IngredientUnitConversion, Long) -> Unit,
+    onDeleteIngredient: () -> Unit,
     isInEditMode: Boolean
 ) {
     var showEditSheet by remember { mutableStateOf(false) }
@@ -65,7 +66,7 @@ fun IngredientInfo(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = ingredient.ingredient.name,
+            text = ingredient.ingredientUnitConversion.ingredient.name,
             style = MaterialTheme.typography.bodyLarge,
             color = JustCookColorPalette.colors.textHelp,
             modifier = Modifier
@@ -76,9 +77,8 @@ fun IngredientInfo(
         Text(
             text = String.format(
                 "%.1f %s",
-                ingredient.amount * (ingredient.ingredientConversion?.coefficient ?: 1.0),
-                ingredient.ingredientConversion?.measurementTo?.name
-                    ?: ingredient.ingredient.unit.name
+                ingredient.amount * (ingredient.ingredientUnitConversion.coefficient),
+                ingredient.ingredientUnitConversion.unit.name
             ),
             style = MaterialTheme.typography.bodyLarge,
             color = JustCookColorPalette.colors.textHelp
@@ -89,7 +89,7 @@ fun IngredientInfo(
                 modifier = Modifier
                     .width(30.dp)
                     .padding(start = 10.dp),
-                onClick = { showEditSheet = true }
+                onClick = { showEditSheet = true; updateConversionsForIngredient() }
             ) {
                 Icon(
                     imageVector = Icons.Default.Edit,
@@ -100,7 +100,7 @@ fun IngredientInfo(
 
             IconButton(
                 modifier = Modifier.width(30.dp),
-                onClick = { onDeleteIngredient(ingredient) }
+                onClick = { onDeleteIngredient() }
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
@@ -112,10 +112,8 @@ fun IngredientInfo(
     }
 
     if (showEditSheet) {
-        // все возможные конверсии + исходная (null)
-        val options = listOf(null) + getConversionsForIngredient(ingredient.ingredient)
-        var editedAmount by remember { mutableFloatStateOf(ingredient.amount) }
-        var editedConversion by remember { mutableStateOf(ingredient.ingredientConversion) }
+        var editedAmount by remember { mutableLongStateOf(ingredient.amount) }
+        var editedConversion by remember { mutableStateOf(ingredient.ingredientUnitConversion) }
         var expanded by remember { mutableStateOf(false) }
 
         ModalBottomSheet(
@@ -129,15 +127,16 @@ fun IngredientInfo(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = ingredient.ingredient.name,
+                    text = ingredient.ingredientUnitConversion.ingredient.name,
                     style = MaterialTheme.typography.titleMedium
                 )
 
                 OutlinedTextField(
                     value = editedAmount.toString(),
                     onValueChange = { input ->
-                        input.toFloatOrNull()?.let { editedAmount = it }
+                        input.toLongOrNull()?.let { editedAmount = it }
                     },
+                    enabled = conversionsForIngredient != null,
                     label = { Text(stringResource(R.string.amount)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -147,15 +146,13 @@ fun IngredientInfo(
                     expanded = expanded,
                     onExpandedChange = { expanded = it }
                 ) {
-                    val label = editedConversion
-                        ?.measurementTo
-                        ?.name
-                        ?: ingredient.ingredient.unit.name
+                    val label = editedConversion.unit.name
 
                     TextField(
                         value = label,
                         onValueChange = {},
                         readOnly = true,
+                        enabled = conversionsForIngredient != null,
                         label = { Text(stringResource(R.string.unit)) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
                         modifier = Modifier
@@ -166,11 +163,8 @@ fun IngredientInfo(
                         expanded = expanded,
                         onDismissRequest = { expanded = false }
                     ) {
-                        options.forEach { conv ->
-                            val title = conv
-                                ?.measurementTo
-                                ?.name
-                                ?: ingredient.ingredient.unit.name
+                        conversionsForIngredient?.forEach { conv ->
+                            val title = conv.unit.name
                             DropdownMenuItem(
                                 text = { Text(title) },
                                 onClick = {
@@ -184,8 +178,7 @@ fun IngredientInfo(
 
                 Button(
                     onClick = {
-                        setIngredientAmount(ingredient, editedAmount)
-                        setIngredientConversion(ingredient, editedConversion)
+                        updateIngredient(editedConversion, editedAmount)
                         showEditSheet = false
                     },
                     modifier = Modifier.align(Alignment.End)

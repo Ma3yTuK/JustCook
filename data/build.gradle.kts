@@ -35,6 +35,10 @@ android {
 
 dependencies {
 
+    implementation(libs.paging)
+    implementation(libs.room)
+    implementation(libs.retrofit)
+    implementation(libs.googleid)
     implementation(libs.kotlinx.datetime.serialization)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

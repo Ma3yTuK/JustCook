@@ -20,11 +20,12 @@ import com.example.components.entity_collection_view.components.recipe_item.reci
 import com.example.components.springs.nonSpatialExpressiveSpring
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.Recipe
+import com.example.data.models.short_models.RecipeShort
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun CardTitle(
-    recipe: Recipe,
+    recipe: RecipeShort,
     collectionIndex: Int
 ) {
     val animatedVisibilityScope = LocalNavAnimatedVisibilityScope.current

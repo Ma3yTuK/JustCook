@@ -40,18 +40,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
 import com.example.components.JustSurface
 import com.example.components.JustDivider
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.EntityWithId
 import com.example.data.models.Ingredient
 import com.example.data.models.Recipe
-import com.example.data.models.SortEntity
 import com.example.data.models.User
 import com.example.data.models.categories.Category
 import com.example.data.models.categories.CategoryCollection
 import com.example.data.models.search_suggestions.SearchSuggestion
 import com.example.data.models.search_suggestions.SearchSuggestionGroup
+import com.example.data.models.short_models.RecipeShort
 import com.example.search.search_page.components.NoResults
 import com.example.search.R
 import com.example.search.search_page.components.SearchCategories
@@ -61,14 +62,16 @@ import com.example.search.search_page.components.search_bar.SearchBar
 import com.example.search.search_page.components.search_bar.components.filter.Filter
 import com.example.search.search_state.SearchState
 import com.example.search.search_state.SearchType
+import kotlinx.coroutines.flow.Flow
+import androidx.paging.compose.collectAsLazyPagingItems
 
 @Composable
 fun SearchPage(
     searchQuery: String,
     searchState: SearchState,
-    searchResults: List<EntityWithId>,
+    searchResults: Flow<PagingData<EntityWithId>>,
     onRecipeClick: (Long) -> Unit,
-    onToggleFavouriteClick: (Recipe) -> Unit,
+    onToggleFavouriteClick: (RecipeShort) -> Unit,
     onUserClick: (Long) -> Unit,
     categoryCollections: List<CategoryCollection>,
     onCategoryClick: (Category) -> Unit,
@@ -81,7 +84,7 @@ fun SearchPage(
     onDismiss: () -> Unit,
     onResetFilters: () -> Unit,
     searchTypes: List<SearchType>,
-    sortingTypes: List<SortEntity>,
+    sortingTypes: List<String>,
     userSearchQuery: String,
     onUserQueryChange: (String) -> Unit,
     foundUsers: List<User>,
@@ -114,13 +117,13 @@ fun SearchPage(
                     suggestions = suggestions,
                     onSuggestionSelect = { onQueryChange(it.suggestion) }
                 )
-                searchResults.isNotEmpty() -> SearchResults(
+                else -> SearchResults(
                     searchResults,
                     onRecipeClick,
                     onToggleFavouriteClick,
                     onUserClick
                 )
-                else -> NoResults()
+                //else -> NoResults()
             }
         }
 

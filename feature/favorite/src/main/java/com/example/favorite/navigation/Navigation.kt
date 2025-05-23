@@ -1,19 +1,12 @@
 package com.example.favorite.navigation
 
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.NavOptions
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import androidx.navigation.toRoute
 import com.example.components.composableWithCompositionLocal
-import com.example.data.models.Recipe
-import com.example.data.services.RecipeService
+import com.example.data.services.RecipeServiceImpl
+import com.example.favorite.favorite.FavoritePage
 import kotlinx.serialization.Serializable
-import androidx.compose.material3.Text
-import com.example.data.models.MeasurementUnit
-import com.example.jetsnack.ui.home.cart.Favorite
 
 @Serializable object FavoriteRoute
 @Serializable object FavoritePageRoute
@@ -24,9 +17,7 @@ fun NavGraphBuilder.favoriteNavigation(
 ) {
     navigation<FavoriteRoute>(startDestination = FavoritePageRoute) {
         composableWithCompositionLocal<FavoritePageRoute> {
-            Favorite(
-                favoriteRecipes = RecipeService.allRecipes.filter { it.isFavorite },
-                onRemoveRecipe = { _ -> },
+            FavoritePage(
                 onRecipeClick = { recipe -> onRecipeClick(recipe.id) }
             )
         }

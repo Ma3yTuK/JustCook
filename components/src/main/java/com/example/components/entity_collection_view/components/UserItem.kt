@@ -27,6 +27,7 @@ import com.example.components.JustSurface
 import com.example.components.springs.spatialExpressiveSpring
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.User
+import com.example.data.models.short_models.UserShort
 
 data class UserSharedElementKey(
     val userId: Long,
@@ -48,8 +49,8 @@ val userDetailBoundsTransform = BoundsTransform { _, _ ->
 @Composable
 fun UserItem(
     collectionIndex: Int,
-    user: User,
-    onUserClick: (User, Int) -> Unit,
+    user: UserShort,
+    onUserClick: (UserShort, Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     JustSurface(
@@ -75,6 +76,7 @@ fun UserItem(
                     .padding(8.dp)
             ) {
                 JustImage(
+                    image = user.image,
                     elevation = 1.dp,
                     contentDescription = null,
                     isVerified = user.isVerified,

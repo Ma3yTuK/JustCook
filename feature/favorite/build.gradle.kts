@@ -36,6 +36,8 @@ android {
 
 dependencies {
 
+    implementation(libs.retrofit)
+    implementation(libs.paging.compose)
     implementation(libs.androidx.navigation.common.android)
     implementation(libs.navigation.runtime.android)
     implementation(libs.androidx.navigation.compose.android)

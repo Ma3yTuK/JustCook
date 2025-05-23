@@ -9,7 +9,7 @@ data class User(
     override val id: Long,
     val name: String,
     val email: String,
-    val hasPremium: Boolean,
     val isVerified: Boolean,
-    val authorities: List<Authority>
+    val authorities: List<Authority>,
+    val image: Image? = null
 ) : EntityWithId

@@ -19,11 +19,12 @@ import com.example.components.JustImage
 import com.example.components.entity_collection_view.components.recipe_item.RecipeSharedElementKey
 import com.example.components.entity_collection_view.components.recipe_item.RecipeSharedElementType
 import com.example.components.entity_collection_view.components.recipe_item.recipeDetailBoundsTransform
+import com.example.data.models.Recipe
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun Image(
-    recipeId: Long,
+    recipe: Recipe,
     collectionIndex: Int?,
     isInEditMode: Boolean,
     onChangeRecipeImage: (Uri) -> Unit,
@@ -45,6 +46,7 @@ fun Image(
 
         with(sharedTransitionScope) {
             JustImage(
+                image = recipe.image,
                 contentDescription = null,
                 onImageChange = onChangeRecipeImage,
                 isEditable = isInEditMode,
@@ -52,7 +54,7 @@ fun Image(
                     .sharedBounds(
                         rememberSharedContentState(
                             key = RecipeSharedElementKey(
-                                recipeId = recipeId,
+                                recipeId = recipe.id,
                                 type = RecipeSharedElementType.Image,
                                 collectionIndex = collectionIndex
                             )

@@ -12,4 +12,5 @@
     <string name="create_recipe">Создать рецепт</string>
     <string name="moderation">Модерация</string>
     <string name="moderation_button">Модерация</string>
+    <string name="default_error_message">Произошла ошибка(</string>
 </resources>

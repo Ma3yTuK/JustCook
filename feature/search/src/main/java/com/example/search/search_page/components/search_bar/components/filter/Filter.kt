@@ -46,7 +46,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.Ingredient
-import com.example.data.models.SortEntity
 import com.example.data.models.User
 import com.example.data.models.categories.CategoryCollection
 import com.example.data.models.categories.LifeStyleCategory
@@ -65,7 +64,7 @@ fun Filter(
     searchState: SearchState,
     onStateChange: (SearchState) -> Unit,
     searchTypes: List<SearchType>,
-    sortingTypes: List<SortEntity>,
+    sortingTypes: List<String>,
     categoryCollections: List<CategoryCollection>,
     userSearchQuery: String,
     onUserQueryChange: (String) -> Unit,
@@ -151,9 +150,9 @@ fun Filter(
             )
             SelectionSection(
                 title = stringResource(R.string.sorting),
-                display = { it.name },
-                onClickOption = { onStateChange(searchState.copy(sortingOptionId = it.id)) },
-                selected = { searchState.sortingOptionId == it.id },
+                display = { it },
+                onClickOption = { onStateChange(searchState.copy(sortingOption = it)) },
+                selected = { searchState.sortingOption == it },
                 selections = sortingTypes
             )
             if (searchState.searchType == SearchType.Recipe) {

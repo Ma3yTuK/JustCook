@@ -37,23 +37,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import com.example.catalogue.R
 import com.example.catalogue.recipe_detail.components.body.components.ingredients.components.IngredientInfo
+import com.example.components.CustomizableItemList
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.Ingredient
-import com.example.data.models.IngredientIngredientConversion
-import com.example.data.models.RecipeIngredient
+import com.example.data.models.IngredientUnitConversion
+import com.example.data.models.RecipeConversion
+import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Ingredients(
-    ingredients: List<RecipeIngredient>,
-    getConversionsForIngredient: (Ingredient) -> List<IngredientIngredientConversion>,
-    setIngredientConversion: (RecipeIngredient, IngredientIngredientConversion?) -> Unit,
-    setIngredientAmount: (RecipeIngredient, Float) -> Unit,
-    onDeleteIngredient: (RecipeIngredient) -> Unit,
-    addIngredient: (Ingredient, Float, IngredientIngredientConversion?) -> Unit,
+    ingredients: List<RecipeConversion>,
+    ingredientQuery: String,
+    onIngredientQueryChange: (String) -> Unit,
+    updateConversionsForIngredient: (Long) -> Unit,
+    updateIngredient: (Int, IngredientUnitConversion?, Long?) -> Unit,
+    onDeleteIngredient: (Int) -> Unit,
+    addIngredient: (IngredientUnitConversion, Long) -> Unit,
     allIngredients: List<Ingredient>,
+    conversionsForIngredient: List<IngredientUnitConversion>?,
     isInEditMode: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -77,13 +83,13 @@ fun Ingredients(
         Spacer(Modifier.height(4.dp))
 
         // Существующие ингредиенты
-        ingredients.forEach { ingredient ->
+        ingredients.forEachIndexed { index, ingredient ->
             IngredientInfo(
                 ingredient = ingredient,
-                getConversionsForIngredient = getConversionsForIngredient,
-                setIngredientConversion = setIngredientConversion,
-                setIngredientAmount = setIngredientAmount,
-                onDeleteIngredient = onDeleteIngredient,
+                updateConversionsForIngredient = { updateConversionsForIngredient(ingredient.ingredientUnitConversion.ingredient.id) },
+                conversionsForIngredient = conversionsForIngredient,
+                updateIngredient = { conversion, amount -> updateIngredient(index, conversion, amount)},
+                onDeleteIngredient = { onDeleteIngredient(index) },
                 isInEditMode = isInEditMode
             )
         }
@@ -112,7 +118,7 @@ fun Ingredients(
         var selectedIngredient by remember { mutableStateOf<Ingredient?>(null) }
         var expandedIngredient by remember { mutableStateOf(false) }
         var amount by remember { mutableStateOf("") }
-        var selectedConversion by remember { mutableStateOf<IngredientIngredientConversion?>(null) }
+        var selectedConversion by remember { mutableStateOf<IngredientUnitConversion?>(null) }
         var expandedConversion by remember { mutableStateOf(false) }
 
         ModalBottomSheet(
@@ -136,26 +142,27 @@ fun Ingredients(
                     onExpandedChange = { expandedIngredient = it }
                 ) {
                     TextField(
-                        value = selectedIngredient?.name ?: "",
-                        onValueChange = {},
+                        value = ingredientQuery,
+                        onValueChange = onIngredientQueryChange,
                         label = { Text(stringResource(R.string.ingredient)) },
-                        readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expandedIngredient) },
                         modifier = Modifier
-                            .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                            .menuAnchor(MenuAnchorType.PrimaryEditable)
                             .fillMaxWidth()
                     )
                     ExposedDropdownMenu(
                         expanded = expandedIngredient,
                         onDismissRequest = { expandedIngredient = false }
                     ) {
-                        allIngredients.forEach { ing ->
+                        allIngredients.forEach {
                             DropdownMenuItem(
-                                text = { Text(ing.name) },
+                                text = { Text(it.name) },
                                 onClick = {
-                                    selectedIngredient = ing
+                                    updateConversionsForIngredient(it.id)
+                                    selectedIngredient = it
                                     selectedConversion = null
                                     expandedIngredient = false
+                                    onIngredientQueryChange(it.name)
                                 }
                             )
                         }
@@ -167,9 +174,8 @@ fun Ingredients(
                     onExpandedChange = { expandedConversion = it }
                 ) {
                     TextField(
-                        enabled = selectedIngredient != null,
-                        value = selectedConversion?.measurementTo?.name
-                            ?: selectedIngredient?.unit?.name ?: "",
+                        enabled = conversionsForIngredient != null,
+                        value = selectedConversion?.unit?.name ?: "",
                         onValueChange = {},
                         label = { Text(stringResource(R.string.unit)) },
                         readOnly = true,
@@ -182,16 +188,12 @@ fun Ingredients(
                         expanded = expandedConversion,
                         onDismissRequest = { expandedConversion = false }
                     ) {
-                        val convOptions = listOf<IngredientIngredientConversion?>(null) +
-                                getConversionsForIngredient(selectedIngredient!!)
-
-                        convOptions.forEach { conv ->
-                            val label = conv?.measurementTo?.name
-                                ?: selectedIngredient!!.unit.name
+                        conversionsForIngredient?.forEach {
+                            val label = it.unit.name
                             DropdownMenuItem(
                                 text = { Text(label) },
                                 onClick = {
-                                    selectedConversion = conv
+                                    selectedConversion = it
                                     expandedConversion = false
                                 }
                             )
@@ -204,7 +206,7 @@ fun Ingredients(
                     enabled = selectedIngredient != null,
                     value = amount,
                     onValueChange = { input ->
-                        input.toFloatOrNull()?.let { amount = input }
+                        input.toLongOrNull()?.let { amount = input }
                     },
                     label = { Text(stringResource(R.string.amount)) },
                     singleLine = true,
@@ -215,13 +217,10 @@ fun Ingredients(
             // Кнопка «Сохранить»
             Button(
                 onClick = {
-                    val amt = amount.toFloatOrNull() ?: 0f
-                    selectedIngredient?.let { ing ->
-                        addIngredient(ing, amt, selectedConversion)
-                    }
+                    addIngredient(selectedConversion!!, amount.toLongOrNull() ?: 0L)
                     showAddSheet = false
                 },
-                enabled = selectedIngredient != null && amount.toFloatOrNull() != null,
+                enabled = amount.toLongOrNull() != null && selectedConversion != null,
                 modifier = Modifier.align(Alignment.End)
             ) {
                 Text(text = stringResource(R.string.save))

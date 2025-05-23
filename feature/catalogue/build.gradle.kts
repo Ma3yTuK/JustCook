@@ -39,6 +39,8 @@ android {
 
 dependencies {
 
+    implementation(libs.retrofit)
+    implementation(libs.pagingCommon)
     implementation(libs.kotlinx.datetime.serialization)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -53,6 +55,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.ui.tooling.preview.android)
     implementation(project(":utils"))
+    implementation(libs.androidx.paging.compose.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -39,6 +39,7 @@ fun RecipeBottomBar(
     onSaveRecipe: () -> Unit,
     onRemoveRecipe: () -> Unit,
     isValid: Boolean,
+    isNewRecipe: Boolean,
     modifier: Modifier = Modifier
 ) {
     val sharedTransitionScope =
@@ -85,21 +86,22 @@ fun RecipeBottomBar(
                                     maxLines = 1
                                 )
                             }
-                            JustButton(
-                                onClick = onRemoveRecipe,
-                                backgroundGradient = JustCookColorPalette.colors.gradient2_3,
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .padding(5.dp)
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.remove_recipe),
-                                    modifier = Modifier.fillMaxWidth(),
-                                    textAlign = TextAlign.Center,
-                                    maxLines = 1
-                                )
+                            if (!isNewRecipe) {
+                                JustButton(
+                                    onClick = onRemoveRecipe,
+                                    backgroundGradient = JustCookColorPalette.colors.gradient2_3,
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(5.dp)
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.remove_recipe),
+                                        modifier = Modifier.fillMaxWidth(),
+                                        textAlign = TextAlign.Center,
+                                        maxLines = 1
+                                    )
+                                }
                             }
-
                         } else {
                             JustButton(
                                 onClick = onToggleFavoritePress,

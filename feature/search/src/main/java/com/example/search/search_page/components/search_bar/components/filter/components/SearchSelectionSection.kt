@@ -35,7 +35,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.Ingredient
-import com.example.data.models.IngredientIngredientConversion
 import com.example.search.R
 import com.example.search.search_page.components.search_bar.components.filter.components.components.Chip
 import com.example.search.search_page.components.search_bar.components.filter.components.components.FilterTitle

@@ -21,11 +21,14 @@ import com.example.components.entity_collection_view.components.recipe_item.reci
 import com.example.components.springs.nonSpatialExpressiveSpring
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.Recipe
+import com.example.data.models.short_models.RecipeShort
+
+const val AMOUNT_OF_GRAM_FOR_CALORIES = 100
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun CardCalories(
-    recipe: Recipe,
+    recipe: RecipeShort,
     collectionIndex: Int
 ) {
     val animatedVisibilityScope = LocalNavAnimatedVisibilityScope.current
@@ -35,7 +38,7 @@ fun CardCalories(
 
     with(sharedTransitionScope) {
         Text(
-            text = "${recipe.calories} ${stringResource(R.string.calories)}",
+            text = "${if (recipe.weight != 0L) recipe.calories * AMOUNT_OF_GRAM_FOR_CALORIES / recipe.weight else 0} ${stringResource(R.string.calories)}",
             style = MaterialTheme.typography.bodyLarge,
             color = JustCookColorPalette.colors.textHelp,
             modifier = Modifier

@@ -41,18 +41,24 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.Recipe
+import com.example.data.models.short_models.RecipeShort
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun RecipeList(
-    recipes: List<Recipe>,
-    onRecipeClick: (Recipe) -> Unit,
-    onFavoriteClick: (Recipe) -> Unit,
+    recipes: Flow<PagingData<RecipeShort>>,
+    onRecipeClick: (RecipeShort) -> Unit,
+    onFavoriteClick: (RecipeShort) -> Unit,
     showIcon: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    updatedItems: Map<Long, RecipeShort> = mapOf(),
 ) {
     CustomizableItemList(
+        updatedItems = updatedItems,
         entities = recipes,
         customItem = { recipe ->
             val recipeIcon = if (showIcon) rememberVectorPainter(
@@ -68,7 +74,6 @@ fun RecipeList(
                 iconPainter = recipeIcon
             )
         },
-        key = { it.id },
         modifier = modifier
     )
 }

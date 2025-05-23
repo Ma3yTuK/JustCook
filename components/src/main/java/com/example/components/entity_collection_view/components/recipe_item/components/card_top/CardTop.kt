@@ -27,6 +27,7 @@ import com.example.components.entity_collection_view.components.recipe_item.Reci
 import com.example.components.entity_collection_view.components.recipe_item.RecipeSharedElementType
 import com.example.components.entity_collection_view.components.recipe_item.recipeDetailBoundsTransform
 import com.example.components.modifiers.offsetGradientBackground
+import com.example.data.models.short_models.RecipeShort
 
 val HighlightCardPadding = 16.dp
 val Density.cardWidthWithPaddingPx
@@ -36,7 +37,7 @@ val Density.cardWidthWithPaddingPx
 @Composable
 fun CardTop(
     index: Int,
-    recipe: Recipe,
+    recipe: RecipeShort,
     collectionIndex: Int,
     gradient: List<Color>,
     scrollProvider: () -> Float,
@@ -87,6 +88,7 @@ fun CardTop(
             )
 
             JustImage(
+                image = recipe.image,
                 contentDescription = null,
                 elevation = 1.dp,
                 modifier = Modifier

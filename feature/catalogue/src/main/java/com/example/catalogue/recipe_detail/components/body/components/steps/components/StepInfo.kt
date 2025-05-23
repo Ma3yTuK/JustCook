@@ -49,8 +49,7 @@ import androidx.compose.material3.TextField
 fun StepInfo(
     recipeStep: RecipeStep,
     index: Int,
-    setStepDescription: (RecipeStep, String) -> Unit,
-    setStepImage: (RecipeStep, Uri) -> Unit,
+    updateStep: (String?, Uri?) -> Unit,
     onDeleteStep: (RecipeStep) -> Unit,
     isInEditMode: Boolean,
     modifier: Modifier = Modifier
@@ -120,9 +119,10 @@ fun StepInfo(
             obstacleAlignment = TextFlowObstacleAlignment.TopEnd,
             obstacleContent = {
                 JustImage(
+                    image = recipeStep.image,
                     contentDescription = null,
                     isEditable = isInEditMode,
-                    onImageChange = { uri -> setStepImage(recipeStep, uri) },
+                    onImageChange = { uri -> updateStep(null, uri) },
                     modifier = Modifier
                         .size(100.dp)
                         .clip(RoundedCornerShape(8.dp))
@@ -160,7 +160,7 @@ fun StepInfo(
 
                 Button(
                     onClick = {
-                        setStepDescription(recipeStep, editedDescription)
+                        updateStep(editedDescription, null)
                         showEditSheet = false
                     },
                     modifier = Modifier.align(Alignment.End)

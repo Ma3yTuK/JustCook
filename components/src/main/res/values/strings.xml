@@ -74,4 +74,6 @@
     <string name="status_verified">Повар JustCook</string>
     <string name="status_not_verified">Любитель</string>
     <string name="favorite">Избранное</string>
+    <string name="error_list">Ошибка загрузки</string>
+    <string name="loading">Загружаем...</string>
 </resources>

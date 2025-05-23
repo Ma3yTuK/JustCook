@@ -10,6 +10,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import com.example.catalogue.R
+import com.example.catalogue.recipe_detail.AMOUNT_OF_GRAM_FOR_CALORIES
 import com.example.catalogue.recipe_detail.HzPadding
 import com.example.components.LocalNavAnimatedVisibilityScope
 import com.example.components.LocalSharedTransitionScope
@@ -32,7 +33,7 @@ fun RecipeCalories(
 
     with(sharedTransitionScope) {
         Text(
-            text = "${recipe.calories} ${stringResource(R.string.calories)}",
+            text = "${if (recipe.weight != 0L) recipe.calories * AMOUNT_OF_GRAM_FOR_CALORIES / recipe.weight else 0} ${stringResource(R.string.calories)}",
             fontStyle = FontStyle.Italic,
             style = MaterialTheme.typography.titleSmall,
             fontSize = 20.sp,

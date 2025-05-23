@@ -9,10 +9,11 @@ import com.example.components.entity_collection_view.components.recipe_item.comp
 import com.example.components.entity_collection_view.components.recipe_item.components.card_contentent.components.CardRating
 import com.example.components.entity_collection_view.components.recipe_item.components.card_contentent.components.CardTitle
 import com.example.data.models.Recipe
+import com.example.data.models.short_models.RecipeShort
 
 @Composable
 fun CardContent(
-    recipe: Recipe,
+    recipe: RecipeShort,
     collectionIndex: Int
 ) {
     CardRating(recipe, collectionIndex)

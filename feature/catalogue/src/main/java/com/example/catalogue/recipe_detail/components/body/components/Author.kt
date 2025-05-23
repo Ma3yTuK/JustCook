@@ -19,10 +19,11 @@ import androidx.compose.ui.unit.dp
 import com.example.components.JustImage
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.User
+import com.example.data.models.short_models.UserShort
 
 @Composable
 fun Author(
-    user: User,
+    user: UserShort,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -34,6 +35,7 @@ fun Author(
         verticalAlignment = Alignment.CenterVertically
     ) {
         JustImage(
+            image = user.image,
             contentDescription = "Avatar",
             modifier = Modifier
                 .size(40.dp)

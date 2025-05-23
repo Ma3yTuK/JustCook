@@ -54,6 +54,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.zIndex
 import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import com.example.data.models.Image
+import com.example.data.repositories.LocalImageRepository
 import com.yalantis.ucrop.UCrop
 import java.io.File
 import java.io.FileOutputStream
@@ -62,7 +64,7 @@ import java.io.FileOutputStream
 fun JustImage(
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
-    model: Any = R.drawable.placeholder,
+    image: Image? = null,
     isEditable: Boolean = false,
     isVerified: Boolean = false,
     isPremium: Boolean = false,
@@ -70,6 +72,9 @@ fun JustImage(
     elevation: Dp = 0.dp,
 ) {
     val context = LocalContext.current
+    val imageRepository = LocalImageRepository.current
+        ?: throw IllegalStateException("No ImageRepository found")
+
     val openDialog = remember { mutableStateOf(false) }
 
     val cropLauncher = rememberLauncherForActivityResult(object : ActivityResultContract<Uri, Uri?>() {
@@ -110,7 +115,7 @@ fun JustImage(
             modifier = Modifier.fillMaxSize()
         ) {
             AsyncImage(
-                model = model,
+                model = image?.let { imageRepository.getUrl(image.id) } ?: R.drawable.placeholder,
                 contentDescription = contentDescription,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop

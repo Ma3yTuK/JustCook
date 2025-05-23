@@ -10,57 +10,35 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
-import com.example.catalogue.RecipeListPage
-import com.example.catalogue.UserListPage
-import com.example.catalogue.Feed
+import com.example.catalogue.recipe_list_page.FilteredRecipeListRoute
+import com.example.catalogue.user_list_page.FilteredUserListRoute
+import com.example.catalogue.recipe_list_page.RecipeListPage
+import com.example.catalogue.user_list_page.UserListPage
 import com.example.catalogue.recipe_detail.RecipeDetail
-import com.example.catalogue.UserDetail
-import com.example.catalogue.collections.CollectionDescription
-import com.example.catalogue.collections.RecipeCollection
-import com.example.catalogue.collections.UserCollection
+import com.example.catalogue.user_detail.UserDetail
+import com.example.catalogue.feed.FeedPage
+import com.example.catalogue.recipe_detail.RecipeDetailPage
+import com.example.catalogue.user_detail.UserDetailPage
 import com.example.components.PremiumAccessRequiredScreen
 import com.example.components.composableWithCompositionLocal
-import com.example.data.models.Recipe
-import com.example.data.models.RecipeFilters
-import com.example.data.models.RecipeFiltersDefault
-import com.example.data.models.User
-import com.example.data.models.UserFilters
-import com.example.data.models.UserFiltersDefault
-import com.example.data.services.RecipeService
-import com.example.data.services.RecipeService.omelet
-import com.example.data.services.RecipeService.pancakes
-import com.example.data.services.RecipeService.userAlice
-import com.example.data.services.RecipeService.userCarol
+import com.example.data.models.Authorities
+import com.example.data.services.RecipeServiceImpl
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.serialization.Serializable
 
 @Serializable object FeedRoute
-@Serializable data class RecipeDetailRoute(val recipeId: Long?, val collectionIndex: Int?, val moderation: Boolean)
+@Serializable data class RecipeDetailRoute(val recipeId: Long?, val collectionIndex: Int?)
 @Serializable data class UserDetailRoute(val userId: Long, val collectionIndex: Int?)
 @Serializable object Catalogue
 
-@Serializable data class FilteredRecipeListRoute(
-    override val title: String,
-    override val sortingOptionId: Long?,
-    override val userIds: List<Long> = listOf(),
-    override val categoryIds: List<Long> = listOf(),
-    override val lifeStyleIds: List<Long> = listOf()
-) : RecipeFiltersDefault(), CollectionDescription
-
-@Serializable data class FilteredUserListRoute(
-    override val title: String,
-    override val sortingOptionId: Long?
-) : UserFiltersDefault(), CollectionDescription
-
 fun NavController.navigateToFilteredRecipeList(
     title: String,
-    sortingOptionId: Long? = null,
     userIds: List<Long> = listOf(),
     categoryIds: List<Long> = listOf(),
     lifeStyleIds: List<Long> = listOf(),
     navOptions: NavOptions? = null
 ) = navigate(route = FilteredRecipeListRoute(
     title,
-    sortingOptionId,
     userIds,
     categoryIds,
     lifeStyleIds
@@ -68,15 +46,15 @@ fun NavController.navigateToFilteredRecipeList(
 
 fun NavController.navigateToFilteredUserList(
     title: String,
-    sortingOptionId: Long? = null,
+    isVerified: Boolean? = null,
     navOptions: NavOptions? = null
 ) = navigate(route = FilteredUserListRoute(
-    title,
-    sortingOptionId
+    title = title,
+    isVerified = isVerified
 ), navOptions)
 
-fun NavController.navigateToRecipeDetail(recipeId: Long? = null, collectionIndex: Int? = null, moderation: Boolean = false, navOptions: NavOptions? = null) =
-    navigate(route = RecipeDetailRoute(recipeId, collectionIndex, moderation), navOptions)
+fun NavController.navigateToRecipeDetail(recipeId: Long? = null, collectionIndex: Int? = null, navOptions: NavOptions? = null) =
+    navigate(route = RecipeDetailRoute(recipeId, collectionIndex), navOptions)
 
 fun NavController.navigateToUserDetail(userId: Long, collectionIndex: Int? = null, navOptions: NavOptions? = null) =
     navigate(route = UserDetailRoute(userId, collectionIndex), navOptions)
@@ -86,8 +64,7 @@ fun NavGraphBuilder.catalogueNavigation(
 ) {
     navigation<Catalogue>(startDestination = FeedRoute) {
         composableWithCompositionLocal<FeedRoute> {
-            Feed(
-                collections = allCollections,
+            FeedPage(
                 onCollectionClick = { entityCollection -> navController.navigate(entityCollection.route) },
                 onRecipeClick = { recipe, collectionIndex ->
                     navController.navigateToRecipeDetail(recipe.id, collectionIndex)
@@ -99,93 +76,41 @@ fun NavGraphBuilder.catalogueNavigation(
             val filteredRecipeListRoute: FilteredRecipeListRoute = backStackEntry.toRoute()
 
             RecipeListPage(
-                title = filteredRecipeListRoute.title,
-                recipes = RecipeService.recipesFiltered(filteredRecipeListRoute),
+                route = filteredRecipeListRoute,
                 onRecipeClick = { recipe ->
                     navController.navigateToRecipeDetail(recipe.id)
-                },
-                onFavoriteClick = { _ -> },
-                isLoggedIn = true
+                }
             )
         }
         composableWithCompositionLocal<FilteredUserListRoute> { backStackEntry ->
             val filteredUserListRoute: FilteredUserListRoute = backStackEntry.toRoute()
 
             UserListPage(
-                title = filteredUserListRoute.title,
-                users = RecipeService.usersFiltered(filteredUserListRoute),
+                route = filteredUserListRoute,
                 onUserClick = { user -> navController.navigateToUserDetail(user.id) }
             )
         }
         composableWithCompositionLocal<RecipeDetailRoute> { backStackEntry ->
             val recipeDetailsRoute: RecipeDetailRoute = backStackEntry.toRoute()
-            var isInEditMode by remember { mutableStateOf(recipeDetailsRoute.recipeId == null || recipeDetailsRoute.moderation) }
 
-            val recipe = RecipeService.allRecipes.firstOrNull { it.id == recipeDetailsRoute.recipeId } ?: Recipe(0, "Новый рецепт", 0, 0f, "", false, false, RecipeService.currentUser, listOf(), listOf(), listOf())
-
-            if (recipe.isPremium && !RecipeService.currentUser.hasPremium) {
-                PremiumAccessRequiredScreen(
-                    onGoBack = { navController.navigateUp() }
-                )
-            } else {
-                RecipeDetail(
-                    recipe = recipe,
-                    collectionIndex = recipeDetailsRoute.collectionIndex,
-                    canDeleteReview = { _ -> true },
-                    onDeleteReview = { _ -> },
-                    onSubmitReview = { _, _ -> },
-                    onUserClick = { user -> navController.navigateToUserDetail(user.id) },
-                    onNameChange = { _ -> },
-                    onChangeDescription = { _ -> },
-                    getConversionsForIngredient = { _ -> listOf() },
-                    setIngredientAmount = { _, _ -> },
-                    setIngredientConversion = { _, _ -> },
-                    onToggleFavoritePress = {},
-                    isLoggedIn = true,
-                    isInEditMode = isInEditMode,
-                    canEdit = true,
-                    onEdit = { isInEditMode = true },
-                    onSaveEdit = {},
-                    onCancelEdit = { isInEditMode = false },
-                    upPress = { navController.navigateUp() },
-                    onDeleteIngredient = { _ -> },
-                    addIngredient = { _, _, _ -> },
-                    setStepDescription = { _, _ -> },
-                    onDeleteStep = { _ -> },
-                    addStep = { _ -> },
-                    setStepImage = { _, _ -> },
-                    onChangeRecipeImage = { _ -> },
-                    allIngredients = RecipeService.allIngredients,
-                    isValid = true
-                )
-            }
+            RecipeDetailPage(
+                recipeId = recipeDetailsRoute.recipeId,
+                collectionIndex = recipeDetailsRoute.collectionIndex,
+                onUserClick = { user -> navController.navigateToUserDetail(user.id) },
+                upPress = { navController.navigateUp() }
+            )
         }
         composableWithCompositionLocal<UserDetailRoute> { backStackEntry ->
             val userDetailsRoute: UserDetailRoute = backStackEntry.toRoute()
 
-            UserDetail(
-                user = RecipeService.allUsers.find { it.id == userDetailsRoute.userId } ?: RecipeService.allUsers.first(),
+            UserDetailPage(
+                userId = userDetailsRoute.userId,
                 collectionIndex = userDetailsRoute.collectionIndex,
-                recipes = RecipeService.allRecipes.filter { it.user.id == userDetailsRoute.userId },
                 onRecipeClick = { recipe ->
                     navController.navigateToRecipeDetail(recipe.id)
                 },
-                upPress = { navController.navigateUp() },
-                onFavoriteClick = { _ -> },
-                isLoggedIn = true
+                upPress = { navController.navigateUp() }
             )
         }
     }
 }
-
-private val allCollections = listOf(
-    RecipeCollection(
-        route = FilteredRecipeListRoute(title = "Завтраки", sortingOptionId = 1),
-    ),
-    UserCollection(
-        route = FilteredUserListRoute(title = "Повары JustCook", sortingOptionId = 1)
-    ),
-    RecipeCollection(
-        route = FilteredRecipeListRoute(title = "Простые рецепты", sortingOptionId = 2)
-    )
-)

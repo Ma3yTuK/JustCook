@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.androidx.tv.material)
     implementation(libs.androidx.constraintlayout.compose)
     implementation(project(":data"))
+    implementation(libs.androidx.paging.compose.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

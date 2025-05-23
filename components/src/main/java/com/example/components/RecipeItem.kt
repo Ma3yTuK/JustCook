@@ -25,12 +25,13 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.Recipe
+import com.example.data.models.short_models.RecipeShort
 
 @Composable
 fun RecipeItem(
-    recipe: Recipe,
-    onRecipeClick: (Recipe) -> Unit,
-    onIconClick: (Recipe) -> Unit,
+    recipe: RecipeShort,
+    onRecipeClick: (RecipeShort) -> Unit,
+    onIconClick: (RecipeShort) -> Unit,
     iconPainter: Painter?,
     modifier: Modifier = Modifier
 ) {
@@ -45,6 +46,7 @@ fun RecipeItem(
         val (divider, image, name, calories, starSpacer, stars, icon) = createRefs()
         createVerticalChain(name, calories, stars, chainStyle = ChainStyle.Packed)
         JustImage(
+            image = recipe.image,
             contentDescription = null,
             modifier = Modifier
                 .size(100.dp)
@@ -110,7 +112,8 @@ fun RecipeItem(
                 }
         )
         RecipeStars(
-            recipe = recipe,
+            recipeRating = recipe.rating,
+            recipeIsPremium = recipe.isPremium,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .constrainAs(stars) {

@@ -110,4 +110,8 @@
     <string name="user_recipes">Рецепты пользователя</string>
     <string name="status_verified">Повар JustCook</string>
     <string name="status_not_verified">Любитель</string>
+    <string name="default_feed_error_message">Проверьте подключение</string>
+    <string name="grams">грамм</string>
+    <string name="edit_recipe_weight">Вес блюда</string>
+    <string name="weigh_label">Вес блюда:</string>
 </resources>

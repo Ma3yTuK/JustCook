@@ -47,6 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.paging.PagingData
 import com.example.components.CustomizableItemList
 import com.example.components.JustButton
 import com.example.components.theme.JustCookColorPalette
@@ -57,27 +58,29 @@ import com.example.components.RecipeItem
 import com.example.components.UserItem
 import com.example.data.models.EntityWithId
 import com.example.data.models.User
+import com.example.data.models.short_models.RecipeShort
+import com.example.data.models.short_models.UserShort
 import com.example.search.R
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun SearchResults(
-    searchResults: List<EntityWithId>,
+    searchResults: Flow<PagingData<EntityWithId>>,
     onRecipeClick: (Long) -> Unit,
-    onToggleFavoriteClick: (Recipe) -> Unit,
+    onToggleFavoriteClick: (RecipeShort) -> Unit,
     onUserClick: (Long) -> Unit
 ) {
     Column {
         Text(
-            text = searchResults.size.toString() + " items",
+            text = stringResource(R.string.search_results),
             style = MaterialTheme.typography.titleLarge,
             color = JustCookColorPalette.colors.textPrimary,
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp)
         )
         CustomizableItemList(
             entities = searchResults,
-            key = { it.id },
             customItem = { entityWithId ->
-                if (entityWithId is Recipe) {
+                if (entityWithId is RecipeShort) {
                     RecipeItem(
                         recipe = entityWithId,
                         onRecipeClick = { onRecipeClick(it.id) },
@@ -85,7 +88,7 @@ fun SearchResults(
                         iconPainter = if (entityWithId.isFavorite) rememberVectorPainter(Icons.Default.Favorite) else rememberVectorPainter(Icons.Default.FavoriteBorder)
                     )
                 }
-                if (entityWithId is User) {
+                if (entityWithId is UserShort) {
                     UserItem(
                         user = entityWithId,
                         onUserClick = { onUserClick(it.id) }

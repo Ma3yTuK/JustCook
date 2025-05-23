@@ -19,11 +19,12 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.User
+import com.example.data.models.short_models.UserShort
 
 @Composable
 fun UserItem(
-    user: User,
-    onUserClick: (User) -> Unit,
+    user: UserShort,
+    onUserClick: (UserShort) -> Unit,
     modifier: Modifier = Modifier
 ) {
     ConstraintLayout(
@@ -37,6 +38,7 @@ fun UserItem(
         val (divider, image, name, statusSpacer, status) = createRefs()
         createVerticalChain(name, status, chainStyle = ChainStyle.Packed)
         JustImage(
+            image = user.image,
             contentDescription = null,
             isVerified = user.isVerified,
             modifier = Modifier

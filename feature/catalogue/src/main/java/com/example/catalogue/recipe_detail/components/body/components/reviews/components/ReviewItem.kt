@@ -25,10 +25,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.catalogue.R
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.format
 import kotlinx.datetime.format.*
+import java.util.Date
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun ReviewItem(
     review: Review,
@@ -50,7 +54,7 @@ fun ReviewItem(
         december = stringResource(R.string.december)
     )
 
-    val dateFormat = LocalDateTime.Format {
+    val dateFormat = DateTimeComponents.Format {
         dayOfMonth()
         char(' ')
         monthName(monthNames)
@@ -60,6 +64,7 @@ fun ReviewItem(
 
     Row(modifier = Modifier.fillMaxWidth()) {
         JustImage(
+            image = review.user.image,
             contentDescription = null,
             modifier = Modifier
                 .size(40.dp)
@@ -94,7 +99,7 @@ fun ReviewItem(
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = review.date.format(dateFormat),
+                    text = Instant.fromEpochMilliseconds(review.moment).format(dateFormat),
                     style = MaterialTheme.typography.labelSmall,
                     color = JustCookColorPalette.colors.textHelp,
                 )

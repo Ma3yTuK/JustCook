@@ -31,6 +31,14 @@ navigationRuntimeAndroidVersion = "2.9.0"
 navigationComposeAndroid = "2.9.0"
 ucrop = "2.2.8"
 foundationAndroidVersion = "1.8.1"
+retrofitVersion = "3.0.0"
+retrofitGsonVersion = "3.0.0"
+roomVersion = "2.7.1"
+pagingVersion = "3.3.6"
+googleid = "1.1.1"
+pagingComposeVersion = "3.3.6"
+pagingComposeAndroid = "3.3.6"
+pagingCommonAndroid = "3.3.6"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -69,6 +77,15 @@ androidx-navigation-common-android = { group = "androidx.navigation", name = "na
 navigation-runtime-android = { group = "androidx.navigation", name = "navigation-runtime-android", version.ref = "navigationRuntimeAndroidVersion" }
 androidx-navigation-compose-android = { group = "androidx.navigation", name = "navigation-compose-android", version.ref = "navigationComposeAndroid" }
 foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroidVersion" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofitVersion" }
+retrofit-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofitGsonVersion" }
+room = { module = "androidx.room:room-runtime", version.ref = "roomVersion" }
+paging = { module = "androidx.paging:paging-runtime", version.ref = "pagingVersion" }
+pagingCommon = { module = "androidx.paging:paging-common", version.ref = "pagingVersion" }
+googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
+paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingComposeVersion" }
+androidx-paging-compose-android = { group = "androidx.paging", name = "paging-compose-android", version.ref = "pagingComposeAndroid" }
+androidx-paging-common-android = { group = "androidx.paging", name = "paging-common-android", version.ref = "pagingCommonAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -76,4 +93,3 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-serialization-plugin = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serializationPlugin" }
-

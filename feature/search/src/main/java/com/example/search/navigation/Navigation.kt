@@ -7,20 +7,19 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
 import com.example.components.composableWithCompositionLocal
-import com.example.data.models.categories.Category
-import com.example.data.models.categories.CategoryCollection
 import com.example.data.models.categories.LifeStyleCategory
 import com.example.data.models.categories.RealCategory
-import com.example.data.services.RecipeService
+import com.example.data.services.RecipeServiceImpl
 import kotlinx.serialization.Serializable
 import com.example.search.search_page.SearchPage
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.paging.PagingData
 import com.example.data.models.EntityWithId
-import com.example.data.models.RecipeSortingOption
-import com.example.data.models.UserSortingOption
 import com.example.search.search_state.SearchState
 import com.example.search.search_state.SearchType
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.Flow
 
 @Serializable object SearchRoute
 @Serializable object SearchPageRoute
@@ -35,15 +34,14 @@ fun NavGraphBuilder.searchNavigation(
         composableWithCompositionLocal<SearchPageRoute> {
             var searchQuery by remember { mutableStateOf("") }
             var searchState by remember { mutableStateOf(SearchState()) }
-            var searchResults: List<EntityWithId> by remember { mutableStateOf(listOf()) }
+            var searchResults: Flow<PagingData<EntityWithId>> = flowOf()
             var userSearchQuery by remember { mutableStateOf("") }
             var ingredientSearchQuery by remember { mutableStateOf("") }
             var isValid by remember { mutableStateOf(false) }
 
             LaunchedEffect(isValid) {
                 if (isValid) {
-                    searchResults =
-                        if (searchState.searchType == SearchType.User) RecipeService.usersFiltered(searchState, searchQuery) else RecipeService.recipesFiltered(searchState, searchQuery)
+                    //searchResults = if (searchState.searchType == SearchType.User) RecipeServiceImpl.usersFiltered(searchState, searchQuery) else RecipeServiceImpl.recipesFiltered(searchState, searchQuery)
                 }
             }
 
@@ -63,7 +61,7 @@ fun NavGraphBuilder.searchNavigation(
                 onRecipeClick = onRecipeClick,
                 onUserClick = onUserClick,
                 onToggleFavouriteClick = { _ -> },
-                categoryCollections = RecipeService.allCategoryCollections,
+                categoryCollections = RecipeServiceImpl.allCategoryCollections,
                 onCategoryClick = { category ->
                     if (category is RealCategory) {
                         onShowRecipesByCategories(listOf(category.id), listOf())
@@ -72,18 +70,18 @@ fun NavGraphBuilder.searchNavigation(
                         onShowRecipesByCategories(listOf(), listOf(category.id))
                     }
                 },
-                suggestions = RecipeService.allSuggestionGroups,
+                suggestions = RecipeServiceImpl.allSuggestionGroups,
                 onEnter = {},
                 onDismiss = { updateValid() },
                 onResetFilters = { searchState = SearchState(); isValid = false },
                 searchTypes = listOf(SearchType.Recipe, SearchType.User),
-                sortingTypes = if (searchState.searchType == SearchType.User) RecipeService.userSortingOptions else RecipeService.recipeSortingOptions,
+                sortingTypes = listOf(),
                 userSearchQuery = userSearchQuery,
                 onUserQueryChange = { userSearchQuery = it },
-                foundUsers = RecipeService.allUsers.filter { it.name == userSearchQuery },
+                foundUsers = RecipeServiceImpl.allUsers.filter { it.name == userSearchQuery },
                 ingredientSearchQuery = ingredientSearchQuery,
                 onIngredientQueryChange = { ingredientSearchQuery = it },
-                foundIngredients = RecipeService.allIngredients.filter { it.name == ingredientSearchQuery },
+                foundIngredients = RecipeServiceImpl.allIngredients.filter { it.name == ingredientSearchQuery },
                 isValid = isValid,
                 searching = false
             )
