@@ -11,9 +11,12 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.http.QueryMap
 
-fun IngredientService.getPagingSource(): PagingSource<Int, Ingredient> {
+fun IngredientService.getPagingSource(queryParam: String?): PagingSource<Int, Ingredient> {
+    val queryMap = queryParam?.let {
+        mapOf("searchQuery" to queryParam)
+    } ?: mapOf()
     return MyPagingSource({ pageParams ->
-        getAllIngredients(pageParams)
+        getAllIngredients(pageParams + queryMap)
     })
 }
 

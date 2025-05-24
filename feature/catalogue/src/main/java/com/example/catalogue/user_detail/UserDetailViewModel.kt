@@ -56,7 +56,16 @@ class UserDetailViewModel(
         ),
         initialKey = 0,
         pagingSourceFactory = {
-            pagingSource = recipeService.getPagingSource(RecipeFiltersDefault(userIds = listOf(_userDetailUiState.value.user.id)), null)
+            val user = _userDetailUiState.value.user
+            pagingSource = recipeService.getPagingSource(RecipeFiltersDefault(users = setOf(
+                UserShort(
+                    id = user.id,
+                    name = user.name,
+                    email = user.email,
+                    isVerified = user.isVerified,
+                    image = user.image
+                )
+            )), null)
             pagingSource
         }
     )

@@ -21,14 +21,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
 import com.example.components.theme.JustCookTheme
 import com.example.justcook.navigation.AppNavigation
 import com.example.components.LocalNavAnimatedVisibilityScope
 import com.example.components.LocalSharedTransitionScope
 import com.example.components.springs.spatialExpressiveSpring
 import com.example.components.springs.nonSpatialExpressiveSpring
+import com.example.data.databases.SuggestionDatabase
 import com.example.data.repositories.ImageRepository
 import com.example.data.repositories.LocalImageRepository
+import com.example.data.repositories.LocalSuggestionRepository
 import com.example.data.services.auth.AuthService
 import com.example.data.services.auth.sign_in.BlankSignInService
 import com.example.data.services.auth.sign_in.LocalSignInService
@@ -83,6 +86,9 @@ class MainActivity : ComponentActivity() {
         val reviewService = retrofit.create(ReviewService::class.java)
         val ingredientService = retrofit.create(IngredientService::class.java)
 
+        val localDatabase = Room.databaseBuilder(this, SuggestionDatabase::class.java, resources.getString(R.string.database_name)).build()
+        val localSuggestionRepository = localDatabase.localSearchEntityRepository()
+
         enableEdgeToEdge()
         setContent {
             JustCookTheme {
@@ -92,6 +98,7 @@ class MainActivity : ComponentActivity() {
                 SharedTransitionLayout {
                     AnimatedVisibility(visible = true) {
                         CompositionLocalProvider(
+                            LocalSuggestionRepository provides localSuggestionRepository,
                             LocalIngredientService provides ingredientService,
                             LocalReviewService provides reviewService,
                             LocalRecipeService provides recipeService,

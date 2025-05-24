@@ -84,7 +84,7 @@ fun Body(
     onDeleteStep: (Int) -> Unit,
     addStep: (String, Uri?) -> Unit,
     addIngredient: (IngredientUnitConversion, Long) -> Unit,
-    allIngredients: List<Ingredient>,
+    ingredientFlow: Flow<PagingData<Ingredient>>,
     isLoggedIn: Boolean,
     onWeightChange: (Long) -> Unit,
     isInEditMode: Boolean,
@@ -124,7 +124,7 @@ fun Body(
                             Description(recipe, onChangeDescription, isInEditMode)
 
                             Spacer(Modifier.height(40.dp))
-                            Ingredients(recipe.ingredients, ingredientQuery, onIngredientQueryChange, updateConversionsForIngredient, updateIngredient, onDeleteIngredient, addIngredient, allIngredients, conversionsForIngredient, isInEditMode)
+                            Ingredients(recipe.ingredients, ingredientQuery, onIngredientQueryChange, updateConversionsForIngredient, updateIngredient, onDeleteIngredient, addIngredient, ingredientFlow, conversionsForIngredient, isInEditMode)
 
                             Spacer(Modifier.height(16.dp))
                             Steps(recipe.steps, updateStep, onDeleteStep, addStep, isInEditMode)

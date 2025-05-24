@@ -104,6 +104,7 @@ fun Favorite(
     val itemAnimationSpecFade = nonSpatialExpressiveSpring<Float>()
     val itemPlacementSpec = spatialExpressiveSpring<IntOffset>()
     val uiState by favoriteViewModel.favoriteUiState.collectAsState()
+    val lazyPagingItems = uiState.dataFlow.collectAsLazyPagingItems()
 
     LaunchedEffect(true) {
         favoriteViewModel.onError = onError
@@ -115,7 +116,7 @@ fun Favorite(
             PageTitle(stringResource(R.string.feature_header))
             CustomizableItemList(
                 removedItems = uiState.removedItems,
-                entities = uiState.dataFlow,
+                lazyPagingItems = lazyPagingItems,
                 customItem = { recipe ->
                     SwipeDismissItem(
                         onDismiss = { favoriteViewModel.onRemoveRecipe(recipe) },
@@ -221,11 +222,14 @@ private fun SwipeDismissItem(
     content: @Composable (isDismissed: Boolean) -> Unit,
 ) {
     // Hold the current state from the Swipe to Dismiss composable
-    val dismissState = rememberSwipeToDismissBoxState(
-        confirmValueChange = { onDismiss(); true }
-    )
-    // Boolean value used for hiding the item if the current state is dismissed
+    val dismissState = rememberSwipeToDismissBoxState()
     val isDismissed = dismissState.currentValue == SwipeToDismissBoxValue.EndToStart
+
+    LaunchedEffect(isDismissed) {
+        if (isDismissed) {
+            onDismiss()
+        }
+    }
 
     AnimatedVisibility(
         modifier = modifier,

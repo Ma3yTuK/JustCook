@@ -4,12 +4,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
@@ -29,16 +31,23 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.example.catalogue.R
 import com.example.catalogue.recipe_detail.components.body.components.ingredients.components.IngredientInfo
 import com.example.components.CustomizableItemList
@@ -58,7 +67,7 @@ fun Ingredients(
     updateIngredient: (Int, IngredientUnitConversion?, Long?) -> Unit,
     onDeleteIngredient: (Int) -> Unit,
     addIngredient: (IngredientUnitConversion, Long) -> Unit,
-    allIngredients: List<Ingredient>,
+    ingredientFlow: Flow<PagingData<Ingredient>>,
     conversionsForIngredient: List<IngredientUnitConversion>?,
     isInEditMode: Boolean,
     modifier: Modifier = Modifier
@@ -121,10 +130,13 @@ fun Ingredients(
         var selectedConversion by remember { mutableStateOf<IngredientUnitConversion?>(null) }
         var expandedConversion by remember { mutableStateOf(false) }
 
+        val ingredientPagingItems = ingredientFlow.collectAsLazyPagingItems()
+
         ModalBottomSheet(
             onDismissRequest = { showAddSheet = false },
             sheetState = sheetState
         ) {
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -150,21 +162,45 @@ fun Ingredients(
                             .menuAnchor(MenuAnchorType.PrimaryEditable)
                             .fillMaxWidth()
                     )
+                    val sizeOfOneItem by remember {
+                        mutableStateOf(50.dp)
+                    }
+                    val screenSize = LocalWindowInfo.current.containerSize
+                    val screenHeight50 by remember {
+                        mutableStateOf(screenSize.height.dp / 2)
+                    }
+                    val itemsSize = sizeOfOneItem * ingredientPagingItems.itemCount
+                    val height by remember(ingredientPagingItems.itemCount) {
+                        mutableStateOf(minOf(itemsSize, screenHeight50))
+                    }
                     ExposedDropdownMenu(
                         expanded = expandedIngredient,
                         onDismissRequest = { expandedIngredient = false }
                     ) {
-                        allIngredients.forEach {
-                            DropdownMenuItem(
-                                text = { Text(it.name) },
-                                onClick = {
-                                    updateConversionsForIngredient(it.id)
-                                    selectedIngredient = it
-                                    selectedConversion = null
-                                    expandedIngredient = false
-                                    onIngredientQueryChange(it.name)
+                        LazyColumn(
+                            modifier = Modifier
+                                .width(screenSize.width.dp)
+                                .height(height)
+                        ) {
+                            items(
+                                count = ingredientPagingItems.itemCount,
+                                key = ingredientPagingItems.itemKey { it.id }
+                            ) { index ->
+                                val ingredient = ingredientPagingItems[index]
+                                if (ingredient != null) {
+                                    DropdownMenuItem(
+                                        text = { Text(ingredient.name) },
+                                        onClick = {
+                                            updateConversionsForIngredient(ingredient.id)
+                                            selectedIngredient = ingredient
+                                            selectedConversion = null
+                                            expandedIngredient = false
+                                            onIngredientQueryChange(ingredient.name)
+                                        },
+                                        modifier = Modifier.height(50.dp)
+                                    )
                                 }
-                            )
+                            }
                         }
                     }
                 }

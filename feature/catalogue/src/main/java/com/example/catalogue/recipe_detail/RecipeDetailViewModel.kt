@@ -1,6 +1,7 @@
 package com.example.catalogue.recipe_detail
 
 import android.net.Uri
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -79,7 +80,6 @@ data class RecipeUiState(
     val collectionIndex: Int? = null,
     val isLoading: Boolean = false,
     val currentUser: User? = null,
-    val allIngredients: List<Ingredient> = listOf(),
     val conversions: List<IngredientUnitConversion>? = null
 ) {
     val isValid: Boolean
@@ -99,7 +99,7 @@ data class RecipeUiState(
     val isNewRecipe: Boolean
         get() = recipe.id == -1L
     val isModerating: Boolean
-        get() = !recipe.isVerified
+        get() = !recipe.isVerified && currentUser?.id != recipe.user.id
 }
 
 const val AMOUNT_OF_GRAM_FOR_CALORIES = 100
@@ -134,8 +134,6 @@ class RecipeDetailViewModel(
     private var reviewPagingSource: PagingSource<Int, Review>? by mutableStateOf(null)
     private var ingredientPagingSource: PagingSource<Int, Ingredient>? by mutableStateOf(null)
 
-    private var ingredientQueryJob: Job? = null
-
     private val reviewPager = Pager(
         config = PagingConfig(
             pageSize = DEFAULT_PAGING_SIZE.toInt(),
@@ -157,7 +155,7 @@ class RecipeDetailViewModel(
         ),
         initialKey = 0,
         pagingSourceFactory = {
-            ingredientPagingSource = ingredientService.getPagingSource()
+            ingredientPagingSource = ingredientService.getPagingSource(uiState.value.ingredientQuery)
             ingredientPagingSource!!
         }
     )
@@ -167,8 +165,7 @@ class RecipeDetailViewModel(
         try {
             _uiState.update {
                 newState.copy(
-                    isLoading = true,
-                    allIngredients = ingredientService.getAllIngredientsWithoutPagination(),
+                    isLoading = true
                 )
             }
             if (recipeId == null) {
@@ -209,11 +206,10 @@ class RecipeDetailViewModel(
         val newRecipe = recipeService.getRecipe(recipeId)
         _uiState.update {
             it.copy(
-                recipe = newRecipe,
-                isInEditMode = !newRecipe.isVerified
+                recipe = newRecipe
             )
         }
-        if (!uiState.value.recipe.isVerified) {
+        if (uiState.value.isModerating) {
             onEdit()
         }
     }
@@ -492,19 +488,17 @@ class RecipeDetailViewModel(
         }
     }
 
-    private fun ingredientQueryChangeJob(ingredientQuery: String): () -> Unit {
+    private fun ingredientQueryChangeJob(): () -> Unit {
         var isCancelled = false
 
         viewModelScope.launch {
             delay(QUERY_UPDATE_INTERVAL.toLong())
             if (isCancelled)
                 return@launch
-            val allIngredients = ingredientService.getAllIngredientsWithoutPagination(ingredientQuery)
-            if (isCancelled)
-                return@launch
+            ingredientPagingSource?.invalidate()
             _uiState.update {
                 it.copy(
-                    allIngredients = allIngredients
+                    ingredientFlow = ingredientPager.flow.cachedIn(viewModelScope)
                 )
             }
         }
@@ -514,13 +508,12 @@ class RecipeDetailViewModel(
 
     fun onIngredientQueryChange(ingredientQuery: String) {
         cancelQuery()
-        cancelQuery = ingredientQueryChangeJob(ingredientQuery)
-
         _uiState.update {
             it.copy(
                 ingredientQuery = ingredientQuery
             )
         }
+        cancelQuery = ingredientQueryChangeJob()
     }
 
     fun onCancelEdit() {

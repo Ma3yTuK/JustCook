@@ -13,7 +13,7 @@ import kotlinx.serialization.Serializable
     override val rating: Float,
     val description: String,
     override val weight: Long,
-    val isVerified: Boolean,
+    override val isVerified: Boolean,
     override val isFavorite: Boolean,
     override val isPremium: Boolean,
     val user: UserShort,

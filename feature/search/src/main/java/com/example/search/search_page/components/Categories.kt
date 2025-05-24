@@ -38,6 +38,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.example.components.theme.JustCookColorPalette
@@ -46,15 +47,22 @@ import com.example.components.JustImage
 import com.example.components.VerticalGrid
 import com.example.data.models.categories.Category
 import com.example.data.models.categories.CategoryCollection
+import com.example.data.models.categories.LifeStyleCategory
+import com.example.data.models.categories.RealCategory
+import com.example.search.R
 
 @Composable
 fun SearchCategories(
-    categoryCollections: List<CategoryCollection>,
+    categories: List<RealCategory>,
+    lifestyles: List<LifeStyleCategory>,
     onCategoryClick: (Category) -> Unit
 ) {
     LazyColumn {
-        itemsIndexed(categoryCollections) { index, collection ->
-            SearchCategoryCollection(collection, index, onCategoryClick)
+        item {
+            SearchCategoryCollection(CategoryCollection(stringResource(R.string.real_categories_header), categories), 0, onCategoryClick)
+        }
+        item {
+            SearchCategoryCollection(CategoryCollection(stringResource(R.string.lifestyles_header), lifestyles), 1, onCategoryClick)
         }
     }
     Spacer(Modifier.height(8.dp))

@@ -24,7 +24,6 @@ import com.example.data.repositories.ImageRepository
 import com.example.data.services.DEFAULT_MAX_SIZE
 import com.example.data.services.DEFAULT_PAGING_SIZE
 import com.example.data.services.MyPagingSource
-import com.example.data.services.RecipeServiceImpl
 import com.example.data.services.auth.TokenService
 import com.example.data.services.recipe.RecipeService
 import com.example.data.services.recipe.UploadRecipeRequest

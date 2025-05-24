@@ -30,31 +30,31 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.components.theme.JustCookColorPalette
-import com.example.data.models.search_suggestions.SearchSuggestion
-import com.example.data.models.search_suggestions.SearchSuggestionGroup
+import com.example.data.models.local.SearchEntry
+import com.example.search.R
+import com.example.search.search_state.SearchState
 
 @Composable
 fun SearchSuggestions(
-    suggestions: List<SearchSuggestionGroup>,
-    onSuggestionSelect: (SearchSuggestion) -> Unit
+    suggestions: List<SearchEntry>,
+    onSuggestionSelect: (SearchEntry) -> Unit
 ) {
     LazyColumn {
-        suggestions.forEach { suggestionGroup ->
-            item {
-                SuggestionHeader(suggestionGroup.name)
-            }
-            items(suggestionGroup.suggestions) { suggestion ->
-                Suggestion(
-                    suggestion = suggestion,
-                    onSuggestionSelect = onSuggestionSelect,
-                    modifier = Modifier.fillParentMaxWidth()
-                )
-            }
-            item {
-                Spacer(Modifier.height(4.dp))
-            }
+        item {
+            SuggestionHeader(stringResource(R.string.suggestion_header))
+        }
+        items(suggestions) { suggestion ->
+            Suggestion(
+                suggestion = suggestion,
+                onSuggestionSelect = onSuggestionSelect,
+                modifier = Modifier.fillParentMaxWidth()
+            )
+        }
+        item {
+            Spacer(Modifier.height(4.dp))
         }
     }
 }
@@ -77,12 +77,12 @@ private fun SuggestionHeader(
 
 @Composable
 private fun Suggestion(
-    suggestion: SearchSuggestion,
-    onSuggestionSelect: (SearchSuggestion) -> Unit,
+    suggestion: SearchEntry,
+    onSuggestionSelect: (SearchEntry) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Text(
-        text = suggestion.suggestion,
+        text = suggestion.entry,
         style = MaterialTheme.typography.titleMedium,
         modifier = modifier
             .heightIn(min = 48.dp)

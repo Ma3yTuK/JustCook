@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp.plugin)
 }
 
 android {
@@ -41,6 +42,8 @@ android {
 
 dependencies {
 
+    ksp(libs.room.compiler)
+    implementation(libs.room)
     implementation(libs.retrofit.gson)
     implementation(libs.retrofit)
     implementation(libs.image.croping)

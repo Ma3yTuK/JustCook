@@ -29,15 +29,15 @@ import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun <T: EntityWithId> CustomizableItemList(
-    entities: Flow<PagingData<T>>,
+    lazyPagingItems: LazyPagingItems<out T>,
     modifier: Modifier = Modifier,
     updatedItems: Map<Long, T> = mapOf(),
     removedItems: Set<Long> = setOf(),
     customItem: @Composable LazyItemScope.(T) -> Unit,
+    scrollState: LazyListState = rememberLazyListState()
 ) {
-    val lazyPagingItems = entities.collectAsLazyPagingItems()
-
     LazyColumn(
+        state = scrollState,
         modifier = modifier
     ) {
         if (lazyPagingItems.loadState.refresh == LoadState.Loading) {

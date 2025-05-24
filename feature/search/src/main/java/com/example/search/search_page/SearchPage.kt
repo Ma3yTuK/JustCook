@@ -1,5 +1,6 @@
 package com.example.search.search_page
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,6 +29,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,11 +37,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.PagingData
 import com.example.components.JustSurface
 import com.example.components.JustDivider
@@ -50,8 +55,6 @@ import com.example.data.models.Recipe
 import com.example.data.models.User
 import com.example.data.models.categories.Category
 import com.example.data.models.categories.CategoryCollection
-import com.example.data.models.search_suggestions.SearchSuggestion
-import com.example.data.models.search_suggestions.SearchSuggestionGroup
 import com.example.data.models.short_models.RecipeShort
 import com.example.search.search_page.components.NoResults
 import com.example.search.R
@@ -64,88 +67,138 @@ import com.example.search.search_state.SearchState
 import com.example.search.search_state.SearchType
 import kotlinx.coroutines.flow.Flow
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.catalogue.recipe_detail.RecipeDetail
+import com.example.components.ErrorPage
+import com.example.components.LoadingOverlay
+import com.example.data.repositories.LocalImageRepository
+import com.example.data.repositories.LocalSearchEntityRepository
+import com.example.data.repositories.LocalSuggestionRepository
+import com.example.data.services.auth.LocalTokenService
+import com.example.data.services.ingredient.IngredientService
+import com.example.data.services.ingredient.LocalIngredientService
+import com.example.data.services.recipe.LocalRecipeService
+import com.example.data.services.recipe.RecipeService
+import com.example.data.services.review.LocalReviewService
+import com.example.data.services.user.LocalUserService
+import com.example.data.services.user.UserService
 
 @Composable
 fun SearchPage(
-    searchQuery: String,
-    searchState: SearchState,
-    searchResults: Flow<PagingData<EntityWithId>>,
     onRecipeClick: (Long) -> Unit,
-    onToggleFavouriteClick: (RecipeShort) -> Unit,
     onUserClick: (Long) -> Unit,
-    categoryCollections: List<CategoryCollection>,
     onCategoryClick: (Category) -> Unit,
-    suggestions: List<SearchSuggestionGroup>,
-    onStateChange: (SearchState) -> Unit,
-    onQueryChange: (String) -> Unit,
-    onEnter: () -> Unit,
-    searching: Boolean,
-    isValid: Boolean,
-    onDismiss: () -> Unit,
-    onResetFilters: () -> Unit,
-    searchTypes: List<SearchType>,
-    sortingTypes: List<String>,
-    userSearchQuery: String,
-    onUserQueryChange: (String) -> Unit,
-    foundUsers: List<User>,
-    ingredientSearchQuery: String,
-    onIngredientQueryChange: (String) -> Unit,
-    foundIngredients: List<Ingredient>,
-    modifier: Modifier = Modifier
 ) {
-    val focusManager = LocalFocusManager.current
-    var searchFocused by remember { mutableStateOf(false) }
-    var showFilters by remember { mutableStateOf(false) }
+    val recipeService = LocalRecipeService.current!!
+    val userService = LocalUserService.current!!
+    val suggestionRepository = LocalSuggestionRepository.current!!
+    val ingredientService = LocalIngredientService.current!!
+    val context = LocalContext.current
+
+    var isSeriousError by remember { mutableStateOf(false) }
+
+    if (isSeriousError) {
+        ErrorPage(stringResource(R.string.default_feed_error_message))
+    } else {
+        SearchPage(
+            recipeService = recipeService,
+            userService = userService,
+            ingredientService = ingredientService,
+            suggestionRepository = suggestionRepository,
+            onCategoryClick = onCategoryClick,
+            onRecipeClick = onRecipeClick,
+            onUserClick = onUserClick,
+            onError = { Toast.makeText(context, context.resources.getString(R.string.default_feed_error_message), Toast.LENGTH_LONG).show() },
+            onSeriousError = { isSeriousError = true }
+        )
+    }
+}
+
+@Composable
+fun SearchPage(
+    recipeService: RecipeService,
+    ingredientService: IngredientService,
+    userService: UserService,
+    suggestionRepository: LocalSearchEntityRepository,
+    onRecipeClick: (Long) -> Unit,
+    onUserClick: (Long) -> Unit,
+    onCategoryClick: (Category) -> Unit,
+    onError: (e: Throwable) -> Unit,
+    onSeriousError: (e: Throwable) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: SearchViewModel = viewModel(factory = SearchViewModel.provideFactory(
+        recipeService = recipeService,
+        ingredientService = ingredientService,
+        userService = userService,
+        suggestionRepository = suggestionRepository,
+        onError = onError,
+        onSeriousError = onSeriousError
+    ))
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val searchResult = if (uiState.isSearchingForRecipe) uiState.recipeFlow.collectAsLazyPagingItems() else uiState.userFlow.collectAsLazyPagingItems()
+    val loadState = searchResult.loadState
 
     JustSurface(modifier = modifier.fillMaxSize()) {
-        Column {
-            Spacer(modifier = Modifier.statusBarsPadding())
-            SearchBar(
-                searchQuery = searchQuery,
-                onShowFilters = { showFilters = true },
-                onEnter = onEnter,
-                searchFocused = searchFocused,
-                onSearchFocusChange = { searchFocused = it },
-                onQueryChange = onQueryChange,
-                searching = searching
-            )
-            JustDivider()
+        LoadingOverlay(uiState.isLoading) {
+            Column {
+                Spacer(modifier = Modifier.statusBarsPadding())
+                SearchBar(
+                    searchQuery = uiState.query,
+                    onShowFilters = viewModel::onShowFilters,
+                    onEnter = viewModel::onEnter,
+                    searchFocused = uiState.searchFocused,
+                    onSearchFocusChange = viewModel::onSearchFocusChange,
+                    onQueryChange = viewModel::onQueryChange,
+                    searching = !loadState.isIdle && !loadState.hasError
+                )
+                JustDivider()
 
-            when {
-                !searchFocused && !isValid -> SearchCategories(categoryCollections, onCategoryClick)
-                searchFocused && !isValid -> SearchSuggestions(
-                    suggestions = suggestions,
-                    onSuggestionSelect = { onQueryChange(it.suggestion) }
-                )
-                else -> SearchResults(
-                    searchResults,
-                    onRecipeClick,
-                    onToggleFavouriteClick,
-                    onUserClick
-                )
-                //else -> NoResults()
+                when {
+                    !uiState.searchFocused && !uiState.isFilteringOrSearching -> SearchCategories(
+                        categories = uiState.categories,
+                        lifestyles = uiState.lifestyles,
+                        onCategoryClick
+                    )
+
+                    uiState.searchFocused && !uiState.isFilteringOrSearching -> SearchSuggestions(
+                        suggestions = uiState.suggestions,
+                        onSuggestionSelect = { viewModel.onQueryChange(it.entry) }
+                    )
+
+                    (!loadState.isIdle || searchResult.itemCount > 0) && !loadState.hasError -> SearchResults(
+                        searchResult,
+                        uiState.savedRecipeItems,
+                        onRecipeClick,
+                        viewModel::onFavoriteToggle,
+                        onUserClick,
+                        uiState.scrollState,
+                    )
+                    else -> NoResults(loadState.hasError)
+                }
             }
-        }
 
-        if (showFilters) {
-            focusManager.clearFocus()
+            if (uiState.showFilters) {
+                keyboardController?.hide()
 
-            Filter(
-                onDismiss = { onDismiss(); showFilters = false },
-                onResetFilters = onResetFilters,
-                searchState = searchState,
-                onStateChange = onStateChange,
-                searchTypes = searchTypes,
-                sortingTypes = sortingTypes,
-                categoryCollections = categoryCollections,
-                userSearchQuery = userSearchQuery,
-                onUserQueryChange = onUserQueryChange,
-                foundUsers = foundUsers,
-                ingredientSearchQuery = ingredientSearchQuery,
-                onIngredientQueryChange = onIngredientQueryChange,
-                foundIngredients = foundIngredients,
-                isValid = isValid
-            )
+                Filter(
+                    onDismiss = viewModel::onDismiss,
+                    onApply = viewModel::onApply,
+                    onResetFilters = viewModel::onReset,
+                    searchState = uiState.searchState,
+                    onStateChange = viewModel::onStateChange,
+                    searchTypes = uiState.searchTypes,
+                    sortingTypes = uiState.sortingTypes,
+                    categories = uiState.categories,
+                    lifestyles = uiState.lifestyles,
+                    userSearchQuery = uiState.userSearchQuery,
+                    onUserQueryChange = viewModel::onRecipeUserQueryChange,
+                    foundUsers = uiState.userForRecipeFlow,
+                    ingredientSearchQuery = uiState.ingredientSearchQuery,
+                    onIngredientQueryChange = viewModel::onIngredientQueryChange,
+                    foundIngredients = uiState.ingredientFlow,
+                )
+            }
         }
     }
 }

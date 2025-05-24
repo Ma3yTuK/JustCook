@@ -60,6 +60,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.constraintlayout.compose.Dimension
 import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.data.models.User
 import com.example.data.models.short_models.RecipeShort
 import com.example.data.models.short_models.UserShort
@@ -71,8 +72,10 @@ fun UserList(
     onUserClick: (UserShort) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val lazyPagingItems = users.collectAsLazyPagingItems()
+
     CustomizableItemList(
-        entities = users,
+        lazyPagingItems = lazyPagingItems,
         customItem = { user ->
             UserItem(
                 user = user,

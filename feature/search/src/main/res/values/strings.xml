@@ -19,4 +19,8 @@
     <string name="by_ingredients">Ингредиенты</string>
     <string name="add_chip_label">Добавьте фильтр</string>
     <string name="search_results">Результаты поиска</string>
+    <string name="default_feed_error_message">Ошибка загрузки</string>
+    <string name="real_categories_header">Категории</string>
+    <string name="lifestyles_header">Состав</string>
+    <string name="suggestion_header">Недавние</string>
 </resources>

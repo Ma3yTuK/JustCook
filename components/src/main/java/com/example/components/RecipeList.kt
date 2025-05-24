@@ -43,6 +43,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.Recipe
 import com.example.data.models.short_models.RecipeShort
@@ -57,9 +58,11 @@ fun RecipeList(
     modifier: Modifier = Modifier,
     updatedItems: Map<Long, RecipeShort> = mapOf(),
 ) {
+    val lazyPagingItems = recipes.collectAsLazyPagingItems()
+
     CustomizableItemList(
         updatedItems = updatedItems,
-        entities = recipes,
+        lazyPagingItems = lazyPagingItems,
         customItem = { recipe ->
             val recipeIcon = if (showIcon) rememberVectorPainter(
                 if (recipe.isFavorite)

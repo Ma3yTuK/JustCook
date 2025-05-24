@@ -118,15 +118,17 @@ fun StepInfo(
             modifier = HzPadding,
             obstacleAlignment = TextFlowObstacleAlignment.TopEnd,
             obstacleContent = {
-                JustImage(
-                    image = recipeStep.image,
-                    contentDescription = null,
-                    isEditable = isInEditMode,
-                    onImageChange = { uri -> updateStep(null, uri) },
-                    modifier = Modifier
-                        .size(100.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                )
+                if (recipeStep.image != null || isInEditMode) {
+                    JustImage(
+                        image = recipeStep.image,
+                        contentDescription = null,
+                        isEditable = isInEditMode,
+                        onImageChange = { uri -> updateStep(null, uri) },
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                    )
+                }
             }
         )
     }

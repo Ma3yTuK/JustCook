@@ -13,4 +13,5 @@
     <string name="moderation">Модерация</string>
     <string name="moderation_button">Модерация</string>
     <string name="default_error_message">Произошла ошибка(</string>
+    <string name="default_feed_error_message">Ошибка загрузки</string>
 </resources>

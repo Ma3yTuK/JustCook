@@ -22,7 +22,7 @@ import retrofit2.http.QueryMap
 
 fun RecipeService.getPagingSource(filters: RecipeFilters, queryParam: String?): PagingSource<Int, RecipeShort> {
     val queryMap = queryParam?.let {
-        mapOf("queryParam" to queryParam)
+        mapOf("searchQuery" to queryParam)
     } ?: mapOf()
     return MyPagingSource({ pageParams ->
         getAllRecipes(pageParams + filters.toMap() + queryMap)
@@ -41,12 +41,18 @@ fun RecipeService.getFavoritePagingSource(): PagingSource<Int, RecipeShort> {
     })
 }
 
+fun RecipeService.getMyRecipesPagingSource(): PagingSource<Int, RecipeShort> {
+    return MyPagingSource({ pageParams ->
+        getMyRecipes(pageParams)
+    })
+}
+
 interface RecipeService {
 
-    @GET("categories")
+    @GET("/recipes/categories")
     suspend fun getCategories(): List<RealCategory>
 
-    @GET("lifestyles")
+    @GET("/recipes/lifestyles")
     suspend fun getLifeStyles(): List<LifeStyleCategory>
 
     @GET("/recipes/sorting_variants")
@@ -60,6 +66,9 @@ interface RecipeService {
 
     @GET("/recipes/all")
     suspend fun getAllRecipes(@QueryMap recipeRequestParams: Map<String, String>): Page<RecipeShort>
+
+    @GET("/recipes/mine")
+    suspend fun getMyRecipes(@QueryMap recipeRequestParams: Map<String, String>): Page<RecipeShort>
 
     @POST("/recipes/makeFavorite/{recipeId}")
     suspend fun makeFavorite(@Path("recipeId") recipeId: Long): Boolean

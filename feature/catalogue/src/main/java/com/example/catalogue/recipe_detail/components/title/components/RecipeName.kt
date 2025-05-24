@@ -109,6 +109,16 @@ fun RecipeName(
         }
     }
 
+    if (!recipe.isVerified) {
+        Text(
+            text = stringResource(R.string.not_verified),
+            style = MaterialTheme.typography.labelSmall,
+            color = JustCookColorPalette.colors.error,
+            fontStyle = FontStyle.Italic,
+            modifier = HzPadding
+        )
+    }
+
     if (showSheet) {
         ModalBottomSheet(
             onDismissRequest = { showSheet = false },

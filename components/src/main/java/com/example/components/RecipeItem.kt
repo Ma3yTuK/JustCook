@@ -61,7 +61,7 @@ fun RecipeItem(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.titleMedium,
-            color = JustCookColorPalette.colors.textSecondary,
+            color = if (recipe.isVerified) JustCookColorPalette.colors.textSecondary else JustCookColorPalette.colors.error,
             modifier = Modifier.constrainAs(name) {
                 width = Dimension.preferredWrapContent
                 linkTo(

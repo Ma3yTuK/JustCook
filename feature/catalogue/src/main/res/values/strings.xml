@@ -114,4 +114,6 @@
     <string name="grams">грамм</string>
     <string name="edit_recipe_weight">Вес блюда</string>
     <string name="weigh_label">Вес блюда:</string>
+    <string name="not_verified">Рецепт не верифицирован</string>
+    <string name="decline">Отклонить</string>
 </resources>

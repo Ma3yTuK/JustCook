@@ -115,7 +115,9 @@ fun JustImage(
             modifier = Modifier.fillMaxSize()
         ) {
             AsyncImage(
-                model = image?.let { imageRepository.getUrl(image.id) } ?: R.drawable.placeholder,
+                model = image?.let { imageRepository.getUrl(image.id) },
+                placeholder = painterResource(R.drawable.placeholder),
+                fallback = painterResource(R.drawable.placeholder),
                 contentDescription = contentDescription,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop

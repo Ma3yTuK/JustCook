@@ -22,7 +22,7 @@ class MyPagingSource<T: Any>(
             val nextPageNumber = params.key ?: 0
             val page = getPage(
                 PageParams(
-                    offset = nextPageNumber * limit,
+                    offset = nextPageNumber.toLong(),
                     limit = limit
                 ).toMap()
             )

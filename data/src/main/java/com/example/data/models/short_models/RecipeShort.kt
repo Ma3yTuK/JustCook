@@ -11,6 +11,7 @@ interface RecipeEntity : EntityWithId {
     val name: String
     val calories: Long
     val rating: Float
+    val isVerified: Boolean
     val isFavorite: Boolean
     val weight: Long
     val image: Image?
@@ -23,6 +24,7 @@ data class RecipeShort(
     override val id: Long,
     override val weight: Long,
     override val name: String,
+    override val isVerified: Boolean,
     override val calories: Long,
     override val rating: Float,
     override val isFavorite: Boolean,

@@ -10,6 +10,7 @@ import com.example.catalogue.collections.CollectionDescription
 import com.example.data.models.query_params.RecipeFilters
 import com.example.data.models.query_params.RecipeFiltersDefault
 import com.example.data.models.short_models.RecipeShort
+import com.example.data.models.short_models.UserShort
 import com.example.data.services.DEFAULT_MAX_SIZE
 import com.example.data.services.DEFAULT_PAGING_SIZE
 import com.example.data.services.recipe.RecipeService
@@ -26,7 +27,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class FilteredRecipeListRoute(
     override val title: String,
-    override val userIds: List<Long> = listOf(),
     override val categoryIds: List<Long> = listOf(),
     override val lifeStyleIds: List<Long> = listOf()
 ) : RecipeFiltersDefault(), CollectionDescription

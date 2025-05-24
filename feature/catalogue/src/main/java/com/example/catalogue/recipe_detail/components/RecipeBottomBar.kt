@@ -36,6 +36,7 @@ fun RecipeBottomBar(
     recipe: Recipe,
     onToggleFavoritePress: () -> Unit,
     isInEditMode: Boolean,
+    isModerating: Boolean,
     onSaveRecipe: () -> Unit,
     onRemoveRecipe: () -> Unit,
     isValid: Boolean,
@@ -95,7 +96,7 @@ fun RecipeBottomBar(
                                         .padding(5.dp)
                                 ) {
                                     Text(
-                                        text = stringResource(R.string.remove_recipe),
+                                        text = if (isModerating) stringResource(R.string.decline) else stringResource(R.string.remove_recipe),
                                         modifier = Modifier.fillMaxWidth(),
                                         textAlign = TextAlign.Center,
                                         maxLines = 1

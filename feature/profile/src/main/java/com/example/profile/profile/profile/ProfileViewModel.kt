@@ -10,7 +10,6 @@ import com.example.data.models.Authority
 import com.example.data.models.Image
 import com.example.data.models.User
 import com.example.data.repositories.ImageRepository
-import com.example.data.services.RecipeServiceImpl
 import com.example.data.services.auth.TokenService
 import com.example.data.services.recipe.UploadRecipeRequest
 import com.example.data.services.user.UploadUserRequest

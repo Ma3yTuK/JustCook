@@ -24,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,7 +32,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -57,6 +61,8 @@ fun SearchBar(
     searching: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     JustSurface(
         color = JustCookColorPalette.colors.uiFloated,
         contentColor = JustCookColorPalette.colors.textSecondary,
@@ -91,20 +97,24 @@ fun SearchBar(
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(
-                        onDone = { onEnter() }
+                        onDone = {
+                            keyboardController?.hide()
+                            onEnter()
+                        }
                     ),
                     modifier = Modifier
                         .weight(1f)
                         .onFocusChanged {
                             onSearchFocusChange(it.isFocused)
                         }
+                        .padding(horizontal = 10.dp)
                 )
                 if (searching) {
                     CircularProgressIndicator(
                         color = JustCookColorPalette.colors.iconPrimary,
                         modifier = Modifier
                             .padding(horizontal = 6.dp)
-                            .size(36.dp)
+                            .size(20.dp)
                     )
                 } else {
                     Spacer(Modifier.width(IconSize)) // balance arrow icon

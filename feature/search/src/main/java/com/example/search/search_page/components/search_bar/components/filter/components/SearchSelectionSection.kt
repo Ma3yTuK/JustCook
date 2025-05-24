@@ -5,8 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -31,26 +34,34 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.example.components.theme.JustCookColorPalette
+import com.example.data.models.EntityWithId
 import com.example.data.models.Ingredient
 import com.example.search.R
 import com.example.search.search_page.components.search_bar.components.filter.components.components.Chip
 import com.example.search.search_page.components.search_bar.components.filter.components.components.FilterTitle
+import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <T> SearchSelectionSection(
+fun <T: EntityWithId> SearchSelectionSection(
     title: String,
+    default: Set<T>,
     getName: (T) -> String,
     setSelected: (T, Boolean) -> Unit,
     query: String,
     onQueryChange: (String) -> Unit,
-    availableChips: List<T>
+    availableChips: Flow<PagingData<T>>
 ) {
+    val lazyPagingItems = availableChips.collectAsLazyPagingItems()
     var showSheet by remember { mutableStateOf(false) }
-    var selectedChips: List<T> by remember { mutableStateOf(listOf()) }
+    var selectedChips: Set<T> by remember { mutableStateOf(default) }
 
     FilterTitle(text = title)
     FlowRow(
@@ -63,7 +74,7 @@ fun <T> SearchSelectionSection(
             Chip(
                 name = getName(chip),
                 selected = true,
-                setSelected = { setSelected(chip, false); selectedChips = selectedChips.filter { it != chip } },
+                setSelected = { setSelected(chip, false); selectedChips = selectedChips - setOf(chip) },
                 modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp).align(Alignment.CenterVertically)
             )
         }
@@ -96,11 +107,6 @@ fun <T> SearchSelectionSection(
                     .padding(24.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text(
-                    text = stringResource(R.string.add_chip_label),
-                    style = MaterialTheme.typography.titleMedium
-                )
-
                 // Выбор ингредиента
                 ExposedDropdownMenuBox(
                     expanded = expanded,
@@ -115,21 +121,44 @@ fun <T> SearchSelectionSection(
                             .menuAnchor(MenuAnchorType.PrimaryEditable)
                             .fillMaxWidth()
                     )
+                    val sizeOfOneItem by remember {
+                        mutableStateOf(50.dp)
+                    }
+                    val screenSize = LocalWindowInfo.current.containerSize
+                    val screenHeight50 by remember {
+                        mutableStateOf(screenSize.height.dp / 2)
+                    }
+                    val itemsSize = sizeOfOneItem * lazyPagingItems.itemCount
+                    val height by remember(lazyPagingItems.itemCount) {
+                        mutableStateOf(minOf(itemsSize, screenHeight50))
+                    }
                     ExposedDropdownMenu(
                         expanded = expanded,
                         onDismissRequest = { expanded = false }
                     ) {
-                        availableChips.forEach { chip ->
-                            val chipName = getName(chip)
-
-                            DropdownMenuItem(
-                                text = { Text(chipName) },
-                                onClick = {
-                                    selected = chip
-                                    onQueryChange(chipName)
-                                    expanded = false
+                        LazyColumn(
+                            modifier = Modifier
+                                .width(screenSize.width.dp)
+                                .height(height)
+                        ) {
+                            items(
+                                count = lazyPagingItems.itemCount,
+                                key = lazyPagingItems.itemKey { it.id }
+                            ) { index ->
+                                val chip = lazyPagingItems[index]
+                                if (chip != null) {
+                                    val chipName = getName(chip)
+                                    DropdownMenuItem(
+                                        text = { Text(chipName) },
+                                        onClick = {
+                                            selected = chip
+                                            onQueryChange(chipName)
+                                            expanded = false
+                                        },
+                                        modifier = Modifier.height(50.dp)
+                                    )
                                 }
-                            )
+                            }
                         }
                     }
                 }
@@ -138,7 +167,7 @@ fun <T> SearchSelectionSection(
             // Кнопка «Сохранить»
             Button(
                 onClick = {
-                    selectedChips = selectedChips + listOf(selected!!)
+                    selectedChips = selectedChips + setOf(selected!!)
                     setSelected(selected!!, true)
                     showSheet = false
                 },

@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -48,12 +49,14 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import com.example.components.CustomizableItemList
 import com.example.components.JustButton
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.Recipe
 import com.example.components.JustDivider
 import com.example.components.JustImage
+import com.example.components.PageTitle
 import com.example.components.RecipeItem
 import com.example.components.UserItem
 import com.example.data.models.EntityWithId
@@ -65,20 +68,19 @@ import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun SearchResults(
-    searchResults: Flow<PagingData<EntityWithId>>,
+    searchResults: LazyPagingItems<out EntityWithId>,
+    updatedItems: Map<Long, EntityWithId>,
     onRecipeClick: (Long) -> Unit,
     onToggleFavoriteClick: (RecipeShort) -> Unit,
-    onUserClick: (Long) -> Unit
+    onUserClick: (Long) -> Unit,
+    scrollState: LazyListState
 ) {
     Column {
-        Text(
-            text = stringResource(R.string.search_results),
-            style = MaterialTheme.typography.titleLarge,
-            color = JustCookColorPalette.colors.textPrimary,
-            modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp)
-        )
+        PageTitle(stringResource(R.string.search_results))
         CustomizableItemList(
-            entities = searchResults,
+            lazyPagingItems = searchResults,
+            updatedItems = updatedItems,
+            scrollState = scrollState,
             customItem = { entityWithId ->
                 if (entityWithId is RecipeShort) {
                     RecipeItem(
@@ -101,6 +103,7 @@ fun SearchResults(
 
 @Composable
 fun NoResults(
+    isError: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -123,7 +126,7 @@ fun NoResults(
         )
         Spacer(Modifier.height(16.dp))
         Text(
-            text = stringResource(R.string.search_no_matches_retry),
+            text = if(isError) stringResource(R.string.default_feed_error_message) else stringResource(R.string.search_no_matches_retry),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()

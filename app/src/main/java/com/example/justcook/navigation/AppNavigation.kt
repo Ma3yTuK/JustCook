@@ -32,7 +32,11 @@ fun AppNavigation(
             navController,
             onRecipeClick = { recipeId -> navController.navigateToRecipeDetail(recipeId) },
             onUserClick = { userId -> navController.navigateToUserDetail(userId) },
-            onShowRecipesByCategories = { _, _ -> navController.navigateToFilteredRecipeList(title = "Завтраки") }
+            onShowRecipesByCategories = { category, lifestyle -> navController.navigateToFilteredRecipeList(
+                title = category?.name ?: lifestyle?.name ?: "Категория",
+                categoryIds = category?.id?.let { listOf(it) } ?: listOf(),
+                lifeStyleIds = lifestyle?.id?.let { listOf(it) } ?: listOf()
+            )}
         )
         favoriteNavigation(
             navController,
@@ -41,7 +45,6 @@ fun AppNavigation(
         profileNavigation(
             navController,
             onModerationRecipeClick = { recipeId -> navController.navigateToRecipeDetail(recipeId) },
-            onUserRecipesClick = { userId -> navController.navigateToFilteredRecipeList(title = "Мои рецепты", userIds = listOf(userId)) },
             onCreateRecipeClick = { navController.navigateToRecipeDetail() }
         )
     }

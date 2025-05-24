@@ -22,7 +22,7 @@ import com.example.catalogue.user_detail.UserDetailPage
 import com.example.components.PremiumAccessRequiredScreen
 import com.example.components.composableWithCompositionLocal
 import com.example.data.models.Authorities
-import com.example.data.services.RecipeServiceImpl
+import com.example.data.models.short_models.UserShort
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.serialization.Serializable
 
@@ -33,13 +33,11 @@ import kotlinx.serialization.Serializable
 
 fun NavController.navigateToFilteredRecipeList(
     title: String,
-    userIds: List<Long> = listOf(),
     categoryIds: List<Long> = listOf(),
     lifeStyleIds: List<Long> = listOf(),
     navOptions: NavOptions? = null
 ) = navigate(route = FilteredRecipeListRoute(
     title,
-    userIds,
     categoryIds,
     lifeStyleIds
 ), navOptions)

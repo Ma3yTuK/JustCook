@@ -1,5 +1,6 @@
 package com.example.data.repositories
 
+import androidx.compose.runtime.compositionLocalOf
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -14,3 +15,5 @@ interface LocalSearchEntityRepository {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveEntries(vararg searchEntries: SearchEntry)
 }
+
+val LocalSuggestionRepository = compositionLocalOf<LocalSearchEntityRepository?> { null }

@@ -7,7 +7,8 @@ import java.util.Date
 
 @Entity(tableName = "search_entry")
 data class SearchEntry(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int? = null,
     val entry: String,
     val moment: Long = Date().time
 )
