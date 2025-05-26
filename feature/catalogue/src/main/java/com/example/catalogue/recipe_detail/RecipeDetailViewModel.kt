@@ -302,7 +302,7 @@ class RecipeDetailViewModel(
         val amount = conversion.amount
         val coefficient = conversion.ingredientUnitConversion.coefficient
         val caloriesPerUnits = conversion.ingredientUnitConversion.ingredient.calories
-        return (amount * coefficient * caloriesPerUnits / AMOUNT_OF_GRAM_FOR_CALORIES).toLong()
+        return (amount / coefficient * caloriesPerUnits / AMOUNT_OF_GRAM_FOR_CALORIES).toLong()
     }
 
     fun updateStep(stepIndex: Int, description: String? = null, image: Uri? = null) = viewModelScope.launch {
