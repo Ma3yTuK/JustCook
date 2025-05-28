@@ -37,6 +37,7 @@ import com.example.data.services.auth.sign_in.BlankSignInService
 import com.example.data.services.auth.sign_in.LocalSignInService
 import com.example.data.services.auth.LocalTokenService
 import com.example.data.services.auth.TokenService
+import com.example.data.services.auth.sign_in.BackendSignInService
 import com.example.data.services.ingredient.IngredientService
 import com.example.data.services.ingredient.LocalIngredientService
 import com.example.data.services.recipe.LocalRecipeService
@@ -79,7 +80,7 @@ class MainActivity : ComponentActivity() {
             .build()
 
         val authService: AuthService = retrofit.create(AuthService::class.java)
-        val signInService = BlankSignInService(authService, tokenService)
+        val signInService = BackendSignInService(this, authService, tokenService)
         val imageRepository = ImageRepository(retrofit)
         val userService = retrofit.create(UserService::class.java)
         val recipeService = retrofit.create(RecipeService::class.java)

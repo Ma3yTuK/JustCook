@@ -41,28 +41,21 @@ fun FeedPage(
 ) {
     val userService = LocalUserService.current!!
     val recipeService = LocalRecipeService.current!!
-    val tokenService = LocalTokenService.current!!
 
-    var isSignedIn by remember { mutableStateOf(tokenService.isSighedIn()) }
     var isError by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf("") }
 
-    RequireSignInPage(
-        isSignedIn = isSignedIn,
-        onSignIn = { isSignedIn = true }
-    ) {
-        if (isError) {
-            ErrorPage(stringResource(R.string.default_feed_error_message))
-        } else {
-            Feed(
-                userService = userService,
-                recipeService = recipeService,
-                onError = { isError = true; error = it.message ?: "noting" },
-                onRecipeClick = onRecipeClick,
-                onUserClick = onUserClick,
-                onCollectionClick = onCollectionClick
-            )
-        }
+    if (isError) {
+        ErrorPage(stringResource(R.string.default_feed_error_message))
+    } else {
+        Feed(
+            userService = userService,
+            recipeService = recipeService,
+            onError = { isError = true; error = it.message ?: "noting" },
+            onRecipeClick = onRecipeClick,
+            onUserClick = onUserClick,
+            onCollectionClick = onCollectionClick
+        )
     }
 }
 

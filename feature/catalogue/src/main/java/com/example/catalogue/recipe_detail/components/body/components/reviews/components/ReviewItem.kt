@@ -37,7 +37,8 @@ import kotlin.time.ExperimentalTime
 fun ReviewItem(
     review: Review,
     canDeleteReview: (Review) -> Boolean,
-    onDeleteReview: (Long) -> Unit
+    onDeleteReview: (Long) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val monthNames = MonthNames(
         january = stringResource(R.string.january),
@@ -62,7 +63,7 @@ fun ReviewItem(
         year()
     }
 
-    Row(modifier = Modifier.fillMaxWidth()) {
+    Row(modifier = modifier.fillMaxWidth()) {
         JustImage(
             image = review.user.image,
             contentDescription = null,

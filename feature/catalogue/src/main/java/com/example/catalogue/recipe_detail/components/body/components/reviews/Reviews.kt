@@ -44,7 +44,7 @@ fun Reviews(
 ) {
     val showSheet = remember { mutableStateOf(false) }
 
-    Column(modifier = modifier.padding(horizontal = 16.dp)) {
+    Column(modifier = modifier.padding(horizontal = 24.dp)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,

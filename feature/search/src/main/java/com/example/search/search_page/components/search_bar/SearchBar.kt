@@ -61,7 +61,7 @@ fun SearchBar(
     searching: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
 
     JustSurface(
         color = JustCookColorPalette.colors.uiFloated,
@@ -98,7 +98,7 @@ fun SearchBar(
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(
                         onDone = {
-                            keyboardController?.hide()
+                            focusManager.clearFocus()
                             onEnter()
                         }
                     ),

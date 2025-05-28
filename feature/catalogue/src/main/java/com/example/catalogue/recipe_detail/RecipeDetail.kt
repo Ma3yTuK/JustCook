@@ -48,6 +48,7 @@ import com.example.catalogue.recipe_detail.components.title.Title
 import com.example.components.ErrorPage
 import com.example.components.LoadingOverlay
 import com.example.components.OnTopButton
+import com.example.components.PremiumAccessRequiredScreen
 import com.example.components.entity_collection_view.components.recipe_item.RecipeSharedElementKey
 import com.example.components.entity_collection_view.components.recipe_item.RecipeSharedElementType
 import com.example.components.entity_collection_view.components.recipe_item.recipeDetailBoundsTransform
@@ -96,25 +97,31 @@ fun RecipeDetailPage(
     val ingredientService = LocalIngredientService.current!!
     val context = LocalContext.current
 
+    var isPremium by remember { mutableStateOf(false) }
     var isSeriousError by remember { mutableStateOf(false) }
 
     if (isSeriousError) {
         ErrorPage(stringResource(R.string.default_feed_error_message))
     } else {
-        RecipeDetail(
-            recipeService = recipeService,
-            reviewService = reviewService,
-            userService = userService,
-            ingredientService = ingredientService,
-            imageRepository = imageRepository,
-            tokenService = tokenService,
-            recipeId = recipeId,
-            collectionIndex = collectionIndex,
-            upPress = upPress,
-            onUserClick = onUserClick,
-            onError = { Toast.makeText(context, context.resources.getString(R.string.default_feed_error_message), Toast.LENGTH_LONG).show() },
-            onSeriousError = { isSeriousError = true }
-        )
+        if (isPremium) {
+            PremiumAccessRequiredScreen(upPress)
+        } else {
+            RecipeDetail(
+                recipeService = recipeService,
+                reviewService = reviewService,
+                userService = userService,
+                ingredientService = ingredientService,
+                imageRepository = imageRepository,
+                tokenService = tokenService,
+                recipeId = recipeId,
+                collectionIndex = collectionIndex,
+                upPress = upPress,
+                onUserClick = onUserClick,
+                onPremium = { isPremium = true },
+                onError = { Toast.makeText(context, context.resources.getString(R.string.default_feed_error_message), Toast.LENGTH_LONG).show() },
+                onSeriousError = { isSeriousError = true }
+            )
+        }
     }
 }
 
@@ -132,6 +139,7 @@ fun RecipeDetail(
     onSeriousError: (e: Throwable) -> Unit,
     recipeId: Long?,
     collectionIndex: Int?,
+    onPremium: () -> Unit,
     upPress: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RecipeDetailViewModel = viewModel(factory = RecipeDetailViewModel.provideFactory(
@@ -146,6 +154,7 @@ fun RecipeDetail(
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(recipeId) {
+        viewModel.onPremium = onPremium
         viewModel.onDelete = upPress
         viewModel.onError = onError
         viewModel.onSeriousError = onSeriousError

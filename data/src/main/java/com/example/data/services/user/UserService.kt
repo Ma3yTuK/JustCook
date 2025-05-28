@@ -18,7 +18,7 @@ import retrofit2.http.QueryMap
 
 fun UserService.getPagingSource(filters: UserFilters, queryParam: String?): PagingSource<Int, UserShort> {
     val queryMap = queryParam?.let {
-        mapOf("queryParam" to queryParam)
+        mapOf("searchQuery" to queryParam)
     } ?: mapOf()
     return MyPagingSource({ pageParams ->
         getAllUsers(pageParams + filters.toMap() + queryMap)

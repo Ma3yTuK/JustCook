@@ -24,8 +24,8 @@ data class FeedUiState(
     val entityCollections: List<EntityCollection> = listOf(
         RecipeCollection(
             route = FilteredRecipeListRoute(
-                title = "Простые блюда",
-                categoryIds = listOf(19)
+                title = "Мясные блюда",
+                categoryIds = listOf(9)
             ),
             entities = listOf()
         ),

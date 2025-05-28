@@ -69,6 +69,7 @@ import kotlinx.coroutines.flow.Flow
 @Composable
 fun SearchResults(
     searchResults: LazyPagingItems<out EntityWithId>,
+    isLoggedIn: Boolean,
     updatedItems: Map<Long, EntityWithId>,
     onRecipeClick: (Long) -> Unit,
     onToggleFavoriteClick: (RecipeShort) -> Unit,
@@ -87,7 +88,8 @@ fun SearchResults(
                         recipe = entityWithId,
                         onRecipeClick = { onRecipeClick(it.id) },
                         onIconClick = onToggleFavoriteClick,
-                        iconPainter = if (entityWithId.isFavorite) rememberVectorPainter(Icons.Default.Favorite) else rememberVectorPainter(Icons.Default.FavoriteBorder)
+                        iconPainter = if (!isLoggedIn) null else
+                            if (entityWithId.isFavorite) rememberVectorPainter(Icons.Default.Favorite) else rememberVectorPainter(Icons.Default.FavoriteBorder)
                     )
                 }
                 if (entityWithId is UserShort) {

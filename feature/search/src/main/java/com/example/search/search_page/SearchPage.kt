@@ -134,10 +134,17 @@ fun SearchPage(
         onSeriousError = onSeriousError
     ))
 ) {
+    val tokenService = LocalTokenService.current!!
     val uiState by viewModel.uiState.collectAsState()
     val keyboardController = LocalSoftwareKeyboardController.current
     val searchResult = if (uiState.isSearchingForRecipe) uiState.recipeFlow.collectAsLazyPagingItems() else uiState.userFlow.collectAsLazyPagingItems()
     val loadState = searchResult.loadState
+
+    var isLoggedIn by remember { mutableStateOf(false) }
+
+    LaunchedEffect(true) {
+        isLoggedIn = tokenService.isSighedIn()
+    }
 
     JustSurface(modifier = modifier.fillMaxSize()) {
         LoadingOverlay(uiState.isLoading) {
@@ -168,6 +175,7 @@ fun SearchPage(
 
                     (!loadState.isIdle || searchResult.itemCount > 0) && !loadState.hasError -> SearchResults(
                         searchResult,
+                        isLoggedIn,
                         uiState.savedRecipeItems,
                         onRecipeClick,
                         viewModel::onFavoriteToggle,

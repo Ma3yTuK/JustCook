@@ -1,7 +1,6 @@
 package com.example.catalogue.recipe_detail
 
 import android.net.Uri
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -37,8 +36,6 @@ import com.example.data.services.review.ReviewService
 import com.example.data.services.review.UploadReviewRequest
 import com.example.data.services.review.getPagingSource
 import com.example.data.services.user.UserService
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,9 +44,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.HttpException
-import java.lang.Thread.sleep
 
 data class RecipeUiState(
     val isInEditMode: Boolean = false,
@@ -367,7 +362,7 @@ class RecipeDetailViewModel(
                     it.copy(
                         recipe = it.recipe.copy(
                             ingredients = it.recipe.ingredients + listOf(newIngredient),
-                            calories = getCaloriesForConversion(newIngredient)
+                            calories = it.recipe.calories + getCaloriesForConversion(newIngredient)
                         ),
                         isLoading = false
                     )

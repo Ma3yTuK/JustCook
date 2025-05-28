@@ -169,7 +169,7 @@ fun Body(
                         ) { index ->
                             val review = lazyPagingItems[index]
                             if (review != null) {
-                                ReviewItem(review, canDeleteReview, onDeleteReview)
+                                ReviewItem(review, canDeleteReview, onDeleteReview, Modifier.padding(horizontal = 24.dp))
                                 Spacer(modifier = Modifier.height(16.dp))
                             }
                         }
