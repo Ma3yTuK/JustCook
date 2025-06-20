@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.example.components.entity_collection_view.components.recipe_item.components.card_contentent.components.AMOUNT_OF_GRAM_FOR_CALORIES
 import com.example.components.theme.JustCookColorPalette
 import com.example.data.models.Recipe
 import com.example.data.models.short_models.RecipeShort
@@ -91,7 +92,7 @@ fun RecipeItem(
             }
         }
         Text(
-            text = "${recipe.calories} ${stringResource(R.string.calories)}",
+            text = "${if (recipe.weight != 0L) recipe.calories * AMOUNT_OF_GRAM_FOR_CALORIES / recipe.weight else 0} ${stringResource(R.string.calories)}",
             style = MaterialTheme.typography.bodyLarge,
             color = JustCookColorPalette.colors.textHelp,
             modifier = Modifier.constrainAs(calories) {
