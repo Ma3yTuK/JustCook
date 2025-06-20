@@ -314,9 +314,10 @@ class SearchViewModel(
 
     fun onReset() {
         _uiState.update {
+            fallbackSearchState = SearchState()
             it.copy(
                 filtersEnabled = false,
-                searchState = SearchState()
+                searchState = fallbackSearchState
             )
         }
     }
