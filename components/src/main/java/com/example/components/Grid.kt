@@ -43,8 +43,8 @@ fun VerticalGrid(
         val placeables = measurables.map { it.measure(itemConstraints) }
         // Track each columns height so we can calculate the overall height
         val columnHeights = Array(columns) { 0 }
-        placeables.forEachIndexed { index, placeable ->
-            val column = index % columns
+        placeables.forEachIndexed { ind, placeable ->
+            val column = ind % columns
             columnHeights[column] += placeable.height
         }
         val height = (columnHeights.maxOrNull() ?: constraints.minHeight)
@@ -55,8 +55,8 @@ fun VerticalGrid(
         ) {
             // Track the Y co-ord per column we have placed up to
             val columnY = Array(columns) { 0 }
-            placeables.forEachIndexed { index, placeable ->
-                val column = index % columns
+            placeables.forEachIndexed { ind, placeable ->
+                val column = ind % columns
                 placeable.placeRelative(
                     x = column * itemWidth,
                     y = columnY[column]

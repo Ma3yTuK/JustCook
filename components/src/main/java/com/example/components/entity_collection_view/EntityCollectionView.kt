@@ -97,10 +97,10 @@ fun Entities(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(start = 24.dp, end = 24.dp)
     ) {
-        itemsIndexed(entityCollection) { index, entity ->
+        itemsIndexed(entityCollection) { ind, entity ->
             if (entity is RecipeShort) {
                 RecipeItem(
-                    index,
+                    ind,
                     collectionIndex,
                     entity,
                     onRecipeClick,

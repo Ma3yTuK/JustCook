@@ -23,9 +23,9 @@ fun RatingStars(rating: Float, onRatingSelected: (Float) -> Unit) {
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth()
     ) {
-        repeat(5) { index ->
-            val filled = index < rating
-            IconButton(onClick = { onRatingSelected((index + 1).toFloat()) }) {
+        repeat(5) { ind ->
+            val filled = ind < rating
+            IconButton(onClick = { onRatingSelected((ind + 1).toFloat()) }) {
                 Icon(
                     painter = if (filled) rememberVectorPainter(Icons.Default.Star) else painterResource(R.drawable.star_outline),
                     contentDescription = null,

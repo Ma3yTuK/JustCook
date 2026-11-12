@@ -162,8 +162,8 @@ private fun JustBottomNavLayout(
             Animatable(if (i == selectedIndex) 1f else 0f)
         }
     }
-    selectionFractions.forEachIndexed { index, selectionFraction ->
-        val target = if (index == selectedIndex) 1f else 0f
+    selectionFractions.forEachIndexed { ind, selectionFraction ->
+        val target = if (ind == selectedIndex) 1f else 0f
         LaunchedEffect(target, animSpec) {
             selectionFraction.animateTo(target, animSpec)
         }
@@ -192,9 +192,9 @@ private fun JustBottomNavLayout(
 
         val itemPlaceables = measurables
             .filterNot { it == indicatorMeasurable }
-            .mapIndexed { index, measurable ->
+            .mapIndexed { ind, measurable ->
                 // Animate item's width based upon the selection amount
-                val width = lerp(unselectedWidth, selectedWidth, selectionFractions[index].value)
+                val width = lerp(unselectedWidth, selectedWidth, selectionFractions[ind].value)
                 measurable.measure(
                     constraints.copy(
                         minWidth = width,

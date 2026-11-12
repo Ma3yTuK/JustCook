@@ -57,7 +57,7 @@ fun Description(
 
     var showEditSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
-    var editedDescription by remember { mutableStateOf(recipe.description) }
+    var editedDescription by remember { mutableStateOf(recipe.information) }
 
     with(sharedTransitionScope) {
         Column {
@@ -75,7 +75,7 @@ fun Description(
 
                 if (isInEditMode) {
                     IconButton(onClick = {
-                        editedDescription = recipe.description
+                        editedDescription = recipe.information
                         showEditSheet = true
                     }) {
                         Icon(
@@ -90,7 +90,7 @@ fun Description(
             Spacer(Modifier.height(16.dp))
 
             Text(
-                text = recipe.description,
+                text = recipe.information,
                 style = MaterialTheme.typography.bodyLarge,
                 color = JustCookColorPalette.colors.textHelp,
                 maxLines = if (isExpanded) Int.MAX_VALUE else 5,

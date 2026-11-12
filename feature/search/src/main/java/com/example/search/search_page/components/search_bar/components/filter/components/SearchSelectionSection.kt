@@ -144,8 +144,8 @@ fun <T: EntityWithId> SearchSelectionSection(
                             items(
                                 count = lazyPagingItems.itemCount,
                                 key = lazyPagingItems.itemKey { it.id }
-                            ) { index ->
-                                val chip = lazyPagingItems[index]
+                            ) { ind ->
+                                val chip = lazyPagingItems[ind]
                                 if (chip != null) {
                                     val chipName = getName(chip)
                                     DropdownMenuItem(

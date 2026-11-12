@@ -54,7 +54,7 @@ data class RecipeUiState(
         weight = 0,
         calories = 0,
         rating = 0f,
-        description = "",
+        information = "",
         isFavorite = false,
         isPremium = false,
         user = UserShort(
@@ -79,7 +79,7 @@ data class RecipeUiState(
 ) {
     val isValid: Boolean
         get() = recipe.name.isNotBlank()
-                && recipe.description.isNotBlank()
+                && recipe.information.isNotBlank()
                 && recipe.user.id >= 0
                 && recipe.ingredients.isNotEmpty()
                 && recipe.steps.isNotEmpty()
@@ -256,8 +256,8 @@ class RecipeDetailViewModel(
                 _uiState.update { state ->
                     state.copy(
                         recipe = state.recipe.copy(
-                            ingredients = state.recipe.ingredients.mapIndexed { index, recipeConversion ->
-                                if (ingredientIndex == index) {
+                            ingredients = state.recipe.ingredients.mapIndexed { ind, recipeConversion ->
+                                if (ingredientIndex == ind) {
                                     oldCalories = getCaloriesForConversion(recipeConversion)
                                     val newConversion = recipeService.saveIngredient(
                                         uploadRecipeConversionRequest = UploadRecipeConversionRequest(
@@ -286,7 +286,7 @@ class RecipeDetailViewModel(
         _uiState.update {
             it.copy(
                 recipe = it.recipe.copy(
-                    ingredients = it.recipe.ingredients.filterIndexed { index, _ -> ingredientIndex != index },
+                    ingredients = it.recipe.ingredients.filterIndexed { ind, _ -> ingredientIndex != ind },
                     calories = it.recipe.calories - getCaloriesForConversion(it.recipe.ingredients[ingredientIndex])
                 ),
             )
@@ -300,7 +300,7 @@ class RecipeDetailViewModel(
         return (amount / coefficient * caloriesPerUnits / AMOUNT_OF_GRAM_FOR_CALORIES).toLong()
     }
 
-    fun updateStep(stepIndex: Int, description: String? = null, image: Uri? = null) = viewModelScope.launch {
+    fun updateStep(stepIndex: Int, information: String? = null, image: Uri? = null) = viewModelScope.launch {
         _uiState.update {
             it.copy(
                 isLoading = true
@@ -310,12 +310,12 @@ class RecipeDetailViewModel(
             _uiState.update {
                 it.copy(
                     recipe = it.recipe.copy(
-                        steps = it.recipe.steps.mapIndexed { index, recipeStep ->
-                            if (stepIndex == index) {
+                        steps = it.recipe.steps.mapIndexed { ind, recipeStep ->
+                            if (stepIndex == ind) {
                                 recipeService.saveStep(
                                     uploadRecipeStepRequest = UploadRecipeStepRequest(
-                                        index = index.toLong(),
-                                        description = description ?: recipeStep.description,
+                                        ind = ind.toLong(),
+                                        information = information ?: recipeStep.information,
                                         imageId = image?.let { imageRepository.uploadImage(image).id } ?: recipeStep.image?.id
                                     )
                                 )
@@ -337,7 +337,7 @@ class RecipeDetailViewModel(
             it.copy(
                 recipe = it.recipe.copy(
                     steps = it.recipe.steps.subList(0, stepIndex).map {
-                            step -> step.copy(index = step.index + 1)
+                            step -> step.copy(ind = step.ind + 1)
                     } + it.recipe.steps.subList(stepIndex + 1, it.recipe.steps.size),
                 )
             )
@@ -373,7 +373,7 @@ class RecipeDetailViewModel(
         }
     }
 
-    fun addStep(description: String, image: Uri? = null) {
+    fun addStep(information: String, image: Uri? = null) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -386,8 +386,8 @@ class RecipeDetailViewModel(
                         recipe = it.recipe.copy(
                             steps = it.recipe.steps + listOf(recipeService.saveStep(
                                 UploadRecipeStepRequest(
-                                    description = description,
-                                    index = it.recipe.steps.size.toLong(),
+                                    information = information,
+                                    ind = it.recipe.steps.size.toLong(),
                                     imageId = image?.let { imageRepository.uploadImage(image).id }
                                 )
                             ))
@@ -470,7 +470,7 @@ class RecipeDetailViewModel(
 
     fun onEdit() {
         _uiState.update { state ->
-            fallbackDescription = state.recipe.description
+            fallbackDescription = state.recipe.information
             fallbackName = state.recipe.name
             fallbackImage = state.recipe.image
             fallbackSteps = state.recipe.steps
@@ -519,7 +519,7 @@ class RecipeDetailViewModel(
                     calories = fallbackCalories!!,
                     ingredients = fallbackIngredients,
                     steps = fallbackSteps,
-                    description = fallbackDescription!!,
+                    information = fallbackDescription!!,
                     name = fallbackName!!,
                     image = fallbackImage,
                     weight = fallbackWeight!!
@@ -532,7 +532,7 @@ class RecipeDetailViewModel(
         _uiState.update {
             it.copy(
                 recipe = it.recipe.copy(
-                    description = newDescription
+                    information = newDescription
                 ),
             )
         }

@@ -69,8 +69,8 @@ fun <T: EntityWithId> CustomizableItemList(
             items(
                 lazyPagingItems.itemCount,
                 key = lazyPagingItems.itemKey { it.id }
-            ) { index ->
-                val entity = lazyPagingItems[index]
+            ) { ind ->
+                val entity = lazyPagingItems[ind]
                 if (entity != null && entity.id !in removedItems) {
                     customItem(updatedItems[entity.id] ?: entity)
                 }

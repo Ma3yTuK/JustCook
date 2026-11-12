@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -71,7 +70,7 @@ fun SearchCategories(
 @Composable
 private fun SearchCategoryCollection(
     collection: CategoryCollection,
-    index: Int,
+    ind: Int,
     onCategoryClick: (Category) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -86,7 +85,7 @@ private fun SearchCategoryCollection(
                 .wrapContentHeight()
         )
         VerticalGrid(Modifier.padding(horizontal = 16.dp)) {
-            val gradient = when (index % 2) {
+            val gradient = when (ind % 2) {
                 0 -> JustCookColorPalette.colors.gradient2_2
                 else -> JustCookColorPalette.colors.gradient2_3
             }

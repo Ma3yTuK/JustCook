@@ -56,7 +56,7 @@ val recipeDetailBoundsTransform = BoundsTransform { _, _ ->
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun RecipeItem(
-    index: Int,
+    ind: Int,
     collectionIndex: Int,
     recipe: RecipeShort,
     onRecipeClick: (RecipeShort, Int) -> Unit,
@@ -122,7 +122,7 @@ fun RecipeItem(
                     .fillMaxSize()
 
             ) {
-                CardTop(index, recipe, collectionIndex, gradient, scrollProvider)
+                CardTop(ind, recipe, collectionIndex, gradient, scrollProvider)
                 Spacer(modifier = Modifier.height(8.dp))
                 CardContent(recipe, collectionIndex)
             }

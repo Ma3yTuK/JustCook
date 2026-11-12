@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Immutable
 @Serializable data class RecipeStep(
     override val id: Long,
-    val description: String,
-    val index: Long,
+    val information: String,
+    val ind: Long,
     val image: Image? = null
 ) : EntityWithId

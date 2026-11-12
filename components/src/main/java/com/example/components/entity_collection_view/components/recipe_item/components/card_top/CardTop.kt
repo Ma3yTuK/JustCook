@@ -36,7 +36,7 @@ val Density.cardWidthWithPaddingPx
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun CardTop(
-    index: Int,
+    ind: Int,
     recipe: RecipeShort,
     collectionIndex: Int,
     gradient: List<Color>,
@@ -80,7 +80,7 @@ fun CardTop(
                             6 * cardWidthWithPaddingPx
                         },
                         offset = {
-                            val left = index * cardWidthWithPaddingPx
+                            val left = ind * cardWidthWithPaddingPx
                             val gradientOffset = left - (scrollProvider() / 3f)
                             gradientOffset
                         }

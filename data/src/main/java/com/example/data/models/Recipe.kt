@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
     override val name: String,
     override val calories: Long,
     override val rating: Float,
-    val description: String,
+    val information: String,
     override val weight: Long,
     override val isVerified: Boolean,
     override val isFavorite: Boolean,

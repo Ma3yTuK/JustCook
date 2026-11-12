@@ -92,13 +92,13 @@ fun Ingredients(
         Spacer(Modifier.height(4.dp))
 
         // Существующие ингредиенты
-        ingredients.forEachIndexed { index, ingredient ->
+        ingredients.forEachIndexed { ind, ingredient ->
             IngredientInfo(
                 ingredient = ingredient,
                 updateConversionsForIngredient = { updateConversionsForIngredient(ingredient.ingredientUnitConversion.ingredient.id) },
                 conversionsForIngredient = conversionsForIngredient,
-                updateIngredient = { conversion, amount -> updateIngredient(index, conversion, amount)},
-                onDeleteIngredient = { onDeleteIngredient(index) },
+                updateIngredient = { conversion, amount -> updateIngredient(ind, conversion, amount)},
+                onDeleteIngredient = { onDeleteIngredient(ind) },
                 isInEditMode = isInEditMode
             )
         }
@@ -185,8 +185,8 @@ fun Ingredients(
                             items(
                                 count = ingredientPagingItems.itemCount,
                                 key = ingredientPagingItems.itemKey { it.id }
-                            ) { index ->
-                                val ingredient = ingredientPagingItems[index]
+                            ) { ind ->
+                                val ingredient = ingredientPagingItems[ind]
                                 if (ingredient != null) {
                                     DropdownMenuItem(
                                         text = { Text(ingredient.name) },

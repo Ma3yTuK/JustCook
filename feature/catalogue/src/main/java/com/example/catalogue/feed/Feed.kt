@@ -81,15 +81,15 @@ fun Feed(
     JustSurface(modifier = modifier.fillMaxSize()) {
         LoadingOverlay(isLoading = feedViewModel.isLoading) {
             LazyColumn(modifier = modifier) {
-                itemsIndexed(uiState.entityCollections) { index, collection ->
-                    if (index > 0) {
+                itemsIndexed(uiState.entityCollections) { ind, collection ->
+                    if (ind > 0) {
                         JustDivider(thickness = 2.dp)
                     }
 
                     if (collection.entities.isNotEmpty()) {
                         EntityCollectionView(
                             collectionName = collection.route.title,
-                            collectionIndex = index,
+                            collectionIndex = ind,
                             entityCollection = collection.entities,
                             onCollectionClick = { onCollectionClick(collection) },
                             onRecipeClick = onRecipeClick,

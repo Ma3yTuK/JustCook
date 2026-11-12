@@ -48,7 +48,7 @@ import androidx.compose.material3.TextField
 @Composable
 fun StepInfo(
     recipeStep: RecipeStep,
-    index: Int,
+    ind: Int,
     updateStep: (String?, Uri?) -> Unit,
     onDeleteStep: (RecipeStep) -> Unit,
     isInEditMode: Boolean,
@@ -59,7 +59,7 @@ fun StepInfo(
     val sheetState = rememberModalBottomSheetState()
 
     // временный текст для редактирования
-    var editedDescription by remember { mutableStateOf(recipeStep.description) }
+    var editedDescription by remember { mutableStateOf(recipeStep.information) }
 
     Column(modifier = modifier.padding(vertical = 8.dp)) {
         // Заголовок шага + кнопки
@@ -70,7 +70,7 @@ fun StepInfo(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(R.string.step_number_format, index + 1),
+                text = stringResource(R.string.step_number_format, ind + 1),
                 style = MaterialTheme.typography.bodyMedium,
                 color = JustCookColorPalette.colors.textHelp
             )
@@ -82,7 +82,7 @@ fun StepInfo(
                     modifier = Modifier
                         .width(30.dp),
                     onClick = {
-                        editedDescription = recipeStep.description
+                        editedDescription = recipeStep.information
                         showEditSheet = true
                     }
                 ) {
@@ -112,7 +112,7 @@ fun StepInfo(
 
         // Описание + картинка (нередактируемая)
         TextFlow(
-            text = recipeStep.description,
+            text = recipeStep.information,
             style = MaterialTheme.typography.titleSmall,
             color = JustCookColorPalette.colors.textSecondary,
             modifier = HzPadding,

@@ -166,8 +166,8 @@ fun Body(
                         items(
                             lazyPagingItems.itemCount,
                             key = lazyPagingItems.itemKey { it.id }
-                        ) { index ->
-                            val review = lazyPagingItems[index]
+                        ) { ind ->
+                            val review = lazyPagingItems[ind]
                             if (review != null) {
                                 ReviewItem(review, canDeleteReview, onDeleteReview, Modifier.padding(horizontal = 24.dp))
                                 Spacer(modifier = Modifier.height(16.dp))

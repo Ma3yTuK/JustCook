@@ -78,12 +78,12 @@ fun Steps(
 
         JustDivider()
 
-        recipeSteps.forEachIndexed { index, recipeStep ->
+        recipeSteps.forEachIndexed { ind, recipeStep ->
             StepInfo(
                 recipeStep = recipeStep,
-                index = index,
-                updateStep = { description, image -> updateStep(index, description, image) },
-                onDeleteStep = { onDeleteStep(index) },
+                ind = ind,
+                updateStep = { information, image -> updateStep(ind, information, image) },
+                onDeleteStep = { onDeleteStep(ind) },
                 isInEditMode,
                 modifier = Modifier.padding(vertical = 4.dp)
             )
