@@ -11,7 +11,7 @@ class BlankSignInService(
     override suspend fun onSignIn(callback: () -> Unit, onError: (Exception) -> Unit) {
         try {
             //tokenService.setToken(authService.login(LoginRequest(userId = "12341234")).token)
-            tokenService.setToken(authService.loginEmail("maria.smirnova@example.com").token)
+            tokenService.setToken(authService.loginEmail("kotenok@gmail.com").token)
             callback()
         } catch(e: Exception) {
             onError(e)

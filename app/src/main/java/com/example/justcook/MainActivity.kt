@@ -80,7 +80,7 @@ class MainActivity : ComponentActivity() {
             .build()
 
         val authService: AuthService = retrofit.create(AuthService::class.java)
-        val signInService = BackendSignInService(this, authService, tokenService)
+        val signInService = BlankSignInService(authService, tokenService)
         val imageRepository = ImageRepository(retrofit)
         val userService = retrofit.create(UserService::class.java)
         val recipeService = retrofit.create(RecipeService::class.java)
